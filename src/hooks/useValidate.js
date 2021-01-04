@@ -51,8 +51,8 @@ const useValidate = (value, formSubmit) => {
         // set state
         setErrors(error => {
           value.passwordConfirm
-            ? error = [ 'Не удалось создать аккаунт!' ]
-            : error = [ 'Не удалось войти в аккаунт!' ];
+            ? error = [ ...error, 'Не удалось создать аккаунт!' ]
+            : error = [ ...error, 'Не удалось войти в аккаунт!' ];
           return error;
         });
         setLoading(false);

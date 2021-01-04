@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 import './signup-page.scss';
 import useValidate from "../../hooks/useValidate";
 import Error from "../Error/Error";
-import { useAuth } from "../../contexts/AuthContext";
 
-export default function SignupPage () {
+const SignupPage = () => {
   // ref
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -15,7 +14,6 @@ export default function SignupPage () {
   const [ formSubmit, setFormSubmit ] = useState(false);
   // other
   const { errors, loading } = useValidate(values, formSubmit);
-  const { currentUser } = useAuth();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -29,11 +27,10 @@ export default function SignupPage () {
   }
 
   return (
-    <>
-      <div className={'authentication-wrapper'}>
+    <div className={'authentication-wrapper'}>
+      <div className={'authentication-form-wrapper'}>
         <h1 className={'authentication-title'}>Регистрация</h1>
         { errors.length !== 0 && <Error errors={errors}/>}
-        { currentUser.email }
         <form onSubmit={handleSubmit} className={'authentication-form'}>
           <div className="authentication-row email">
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
@@ -71,10 +68,15 @@ export default function SignupPage () {
             </button>
           </div>
         </form>
-        <div className={'login-link-wrapper'}>
-          <p>Уже есть аккаунт? <Link to={'login'}>Войти</Link></p>
+        <div className="forgot-password-wrapper">
+          <Link to={'/forgot-password'}>Забыли пароль?</Link>
         </div>
       </div>
-    </>
+      <div className={'authentication-link-wrapper'}>
+        <p>Уже есть аккаунт? <Link to={'login'}>Войти</Link></p>
+      </div>
+    </div>
   )
 }
+
+export default SignupPage;

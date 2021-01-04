@@ -3,13 +3,15 @@
 .authentication-wrapper {
   max-width: 270px;
   margin: 0 auto;
-  min-height: 320px;
+}
+
+.authentication-form-wrapper {
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-gap: 10px;
   border: 1px solid$gray-color;
   border-radius: 4px;
-  padding: 6px 12px;
+  padding: 9px 12px 12px 12px;
 }
 
 .authentication-form {
@@ -36,4 +38,13 @@
 
 .authentication-button {
   height: 40px;
+}
+
+.forgot-password-wrapper {
+  text-align: center;
+}
+
+.authentication-link-wrapper {
+  text-align: center;
+  margin-top: 8px;
 }
