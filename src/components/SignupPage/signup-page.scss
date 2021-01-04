@@ -1,0 +1,39 @@
+@import "../../variables.scss";
+
+.authentication-wrapper {
+  max-width: 270px;
+  margin: 0 auto;
+  min-height: 320px;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-gap: 10px;
+  border: 1px solid$gray-color;
+  border-radius: 4px;
+  padding: 6px 12px;
+}
+
+.authentication-form {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.authentication-title {
+  text-align: center;
+}
+
+.email-row__label {
+  font-size: 14px;
+}
+
+.email-row__input {
+  margin-top: 3px;
+}
+
+.authentication-button__wrapper {
+  margin-top: 10px;
+}
+
+.authentication-button {
+  height: 40px;
+}
