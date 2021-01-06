@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import './news-page.scss';
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import Error from "../Error/Error";
+import Alert from "../Alert/Alert";
 
 export default function NewsPage() {
   // state
@@ -24,7 +24,7 @@ export default function NewsPage() {
   return (
     <>
       <div className="profile">
-        {errors.length !== 0 && <Error errors={errors}/>}
+        {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
         <h2 className={'profile-title'}>Профиль</h2>
         { currentUser.email }
       </div>

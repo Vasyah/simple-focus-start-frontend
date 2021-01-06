@@ -1,8 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import './signup-page.scss';
-import useValidate from "../../hooks/useValidate";
-import Error from "../Error/Error";
+import Alert from "../Alert/Alert";
+import useValidateEmail from "../../hooks/useValidateEmail";
+import useValidatePassword from "../../hooks/useValidatePassword";
+import useSignup from "../../hooks/useSignup";
 
 const SignupPage = () => {
   // ref
@@ -12,8 +14,11 @@ const SignupPage = () => {
   // state
   const [ values, setValues ] = useState({});
   const [ formSubmit, setFormSubmit ] = useState(false);
+  const [ errors, setErrors ] = useState([]);
   // other
-  const { errors, loading } = useValidate(values, formSubmit);
+  const { signupErrors, loading } = useSignup(values, formSubmit);
+  const { emailErrors } = useValidateEmail(values.email, formSubmit);
+  const { passwordErrors } = useValidatePassword(values, formSubmit);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -26,16 +31,21 @@ const SignupPage = () => {
     setFormSubmit(true);
   }
 
+  useEffect(() => {
+    const messages = [...signupErrors, ...passwordErrors, ...emailErrors];
+    setErrors(messages);
+  }, [emailErrors, passwordErrors, signupErrors]);
+
   return (
     <div className={'authentication-wrapper'}>
       <div className={'authentication-form-wrapper'}>
         <h1 className={'authentication-title'}>Регистрация</h1>
-        { errors.length !== 0 && <Error errors={errors}/>}
+        { errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
         <form onSubmit={handleSubmit} className={'authentication-form'}>
           <div className="authentication-row email">
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
             <input
-              defaultValue={'kashin.savva@mail.ru'}
+              defaultValue={'yakikbutovski353@gmail.com'}
               type="text"
               ref={emailRef}
               className={'email-row__input'}

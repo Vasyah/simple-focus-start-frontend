@@ -1,0 +1,26 @@
+@import "../../variables.scss";
+
+.alert-wrapper {
+  border-radius: 4px;
+  text-align: center;
+  padding: 2px 5px;
+}
+
+.alert-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 25px;
+}
+
+.error {
+  background: $danger-color;
+}
+
+.info {
+  background: $info-color;
+}
+
+.success {
+  background: $success-color;
+}
