@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from "../contexts/AuthContext";
 
-const useReset = (email, submitForm) => {
+const useForgotPassword = (email, noErrors) => {
   // state
   const [ resetErrors, setResetErrors ] = useState([]);
   const [ loading, setLoading ] = useState(false);
@@ -10,9 +10,10 @@ const useReset = (email, submitForm) => {
   const { resetPassword } = useAuth();
 
   useEffect(() => {
-    if (!submitForm) return;
+    if (!noErrors) return;
     setSignup().catch(error => console.log(error));
-  }, [submitForm, email]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noErrors, email]);
 
   const setSignup = async () => {
     setResetErrors([]);
@@ -32,4 +33,4 @@ const useReset = (email, submitForm) => {
   return { resetErrors, messages, loading };
 }
 
-export default useReset;
+export default useForgotPassword;

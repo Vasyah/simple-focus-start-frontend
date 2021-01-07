@@ -12,10 +12,11 @@ const LoginPage = () => {
   const passwordRef = useRef();
   // state
   const [ values, setValues ] = useState({});
-  const [ formSubmit, setFormSubmit ] = useState(false);
   const [ errors, setErrors ] = useState([]);
+  const [ formSubmit, setFormSubmit ] = useState(false);
+  const [ noErrors, setNoErrors ] = useState(false);
   // other
-  const { loginErrors, loading } = useLogin(values, formSubmit);
+  const { loginErrors, loading } = useLogin(values, noErrors);
   const { emailErrors } = useValidateEmail(values.email, formSubmit);
   const { passwordErrors } = useValidatePassword(values, formSubmit);
 
@@ -30,9 +31,14 @@ const LoginPage = () => {
   }
 
   useEffect(() => {
-    const messages = [...loginErrors, ...passwordErrors, ...emailErrors];
+    const messages = [ ...passwordErrors, ...emailErrors ];
+    if (!messages.length && formSubmit) {
+      setNoErrors(true);
+      messages.push(...loginErrors);
+    }
     setErrors(messages);
-  }, [emailErrors, passwordErrors, loginErrors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ emailErrors, passwordErrors, loginErrors ]);
 
 
   return (
@@ -45,7 +51,7 @@ const LoginPage = () => {
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
             <input
               defaultValue={'yakikbutovski353@gmail.com'}
-              type="email"
+              type="text"
               ref={emailRef}
               className={'email-row__input'}
               id={'email'}/>

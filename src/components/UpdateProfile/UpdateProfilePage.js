@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import './signup-page.scss';
+import './update-profile.scss';
 import Alert from "../Alert/Alert";
 import useValidateEmail from "../../hooks/useValidateEmail";
 import useValidatePassword from "../../hooks/useValidatePassword";
-import useSignup from "../../hooks/useSignup";
+import { useAuth } from "../../contexts/AuthContext";
+import useUpdateProfile from "../../hooks/useUpdateProfile";
 
-const SignupPage = () => {
+const UpdateProfilePage = () => {
   // ref
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -17,7 +18,8 @@ const SignupPage = () => {
   const [ formSubmit, setFormSubmit ] = useState(false);
   const [ noErrors, setNoErrors ] = useState(false);
   // other
-  const { signupErrors, loading } = useSignup(values, noErrors);
+  const { currentUser } = useAuth();
+  const { updateProfileErrors, loading } = useUpdateProfile(values, noErrors);
   const { emailErrors } = useValidateEmail(values.email, formSubmit);
   const { passwordErrors } = useValidatePassword(values, formSubmit);
 
@@ -33,25 +35,27 @@ const SignupPage = () => {
   }
 
   useEffect(() => {
-    const messages = [ ...passwordErrors, ...emailErrors ];
+    const messages = [ ...emailErrors ];
+    if (values.password) messages.push(...passwordErrors);
     if (!messages.length && formSubmit) {
+      console.log('1')
       setNoErrors(true);
-      messages.push(...signupErrors);
+      messages.push(...updateProfileErrors);
     }
     setErrors(messages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [emailErrors, passwordErrors, signupErrors]);
+  }, [ emailErrors, passwordErrors, updateProfileErrors ]);
 
   return (
     <div className={'authentication-wrapper'}>
       <div className={'authentication-form-wrapper'}>
-        <h1 className={'authentication-title'}>Регистрация</h1>
+        <h1 className={'authentication-title'}>Изменить профиль</h1>
         {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
         <form onSubmit={handleSubmit} className={'authentication-form'}>
           <div className="authentication-row email">
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
             <input
-              defaultValue={'yakikbutovski353@gmail.com'}
+              defaultValue={currentUser.email}
               type="text"
               ref={emailRef}
               className={'email-row__input'}
@@ -60,7 +64,7 @@ const SignupPage = () => {
           <div className="authentication-row password">
             <label htmlFor={'password'} className={'email-row__label'}>Пароль</label>
             <input
-              defaultValue={'123456789'}
+              placeholder={'Пустое - без изменений'}
               type="password"
               ref={passwordRef}
               className={'email-row__input'}
@@ -69,7 +73,7 @@ const SignupPage = () => {
           <div className="authentication-row password-confirm">
             <label htmlFor={'password-confirm'} className={'email-row__label'}>Повторите пароль</label>
             <input
-              defaultValue={'123456789'}
+              placeholder={'Пустое - без изменений'}
               type="password"
               ref={passwordConfirmRef}
               className={'email-row__input'}
@@ -80,19 +84,16 @@ const SignupPage = () => {
               disabled={loading}
               type={'submit'}
               className={'authentication-button button-blue'}>
-              Зарегистрироваться
+              Изменить
             </button>
           </div>
         </form>
-        <div className="forgot-password-wrapper">
-          <Link to={'/forgot-password'}>Забыли пароль?</Link>
-        </div>
       </div>
       <div className={'authentication-link-wrapper'}>
-        <p>Уже есть аккаунт? <Link to={'login'}>Войти</Link></p>
+        <Link to={'/'}>Отменить</Link>
       </div>
     </div>
   )
 }
 
-export default SignupPage;
+export default UpdateProfilePage;

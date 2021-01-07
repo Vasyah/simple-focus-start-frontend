@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import './forgot-password-page.scss';
 import Alert from "../Alert/Alert";
-import useReset from "../../hooks/useReset";
+import useForgotPassword from "../../hooks/useForgotPassword";
 import useValidateEmail from "../../hooks/useValidateEmail";
 
 const ForgotPasswordPage = () => {
@@ -10,10 +10,11 @@ const ForgotPasswordPage = () => {
   const emailRef = useRef();
   // state
   const [ values, setValues ] = useState({});
-  const [ formSubmit, setFormSubmit ] = useState(false);
   const [ errors, setErrors ] = useState([]);
+  const [ formSubmit, setFormSubmit ] = useState(false);
+  const [ noErrors, setNoErrors ] = useState(false);
   // other
-  const { resetErrors, messages, loading } = useReset(values.email, formSubmit);
+  const { resetErrors, messages, loading } = useForgotPassword(values.email, noErrors);
   const { emailErrors } = useValidateEmail(values.email, formSubmit);
 
   const handleSubmit = (event) => {
@@ -26,9 +27,14 @@ const ForgotPasswordPage = () => {
   }
 
   useEffect(() => {
-    const messages = [...resetErrors, ...emailErrors];
+    const messages = [ ...emailErrors ];
+    if (!messages.length && formSubmit) {
+      setNoErrors(true);
+      messages.push(...resetErrors);
+    }
     setErrors(messages);
-  }, [resetErrors, emailErrors]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emailErrors, resetErrors]);
 
   return (
     <div className={'authentication-wrapper'}>
@@ -41,7 +47,7 @@ const ForgotPasswordPage = () => {
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
             <input
               defaultValue={'yakikbutovski353@gmail.com'}
-              type="email"
+              type="text"
               ref={emailRef}
               className={'email-row__input'}
               id={'email'}/>

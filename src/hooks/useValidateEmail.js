@@ -6,6 +6,7 @@ const useValidateEmail = (email, formSubmit) => {
   useEffect(() => {
     if (!formSubmit) return;
     setValidationErrors()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ formSubmit, email ]);
 
   const setValidationErrors = () => {

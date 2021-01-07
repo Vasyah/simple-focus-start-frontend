@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
-const useLogin = (value, submitForm) => {
+const useLogin = (values, noErrors) => {
   // state
   const [ loginErrors, setLoginErrors ] = useState([]);
   const [ loading, setLoading ] = useState(false);
@@ -11,15 +11,16 @@ const useLogin = (value, submitForm) => {
   const history = useHistory();
 
   useEffect(() => {
-    if (!submitForm) return;
+    if (!noErrors) return;
     setSignup().catch(error => console.log(error));
-  }, [submitForm, value]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [noErrors, values]);
 
   const setSignup = async () => {
     setLoginErrors([]);
     try {
       setLoading(true);
-      await login(value.email, value.password);
+      await login(values.email, values.password);
       history.push('/');
       setLoading(false);
     } catch {
