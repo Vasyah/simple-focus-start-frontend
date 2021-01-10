@@ -1,0 +1,74 @@
+@import "../../variables.scss";
+
+.header-wrapper {
+  height: 60px;
+  width: 100vw;
+  background: $light-color;
+}
+
+.header-content {
+  height: 60px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.logo-img {
+  max-width: 60px;
+}
+
+.profile-dropdown-menu-wrapper {
+  cursor: pointer;
+  transition: 0.3s ease;
+  grid-column: span 3;
+
+  &:hover {
+    background-color: $gray-color;
+  }
+}
+
+.logo {
+  grid-column: span 2;
+}
+.navigation {
+  grid-column: span 7;
+}
+
+.profile-dropdown-menu {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  position: relative;
+  align-content: center;
+  height: 60px;
+}
+
+.profile-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: darkslateblue;
+  color: #fff;
+  line-height: 30px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-arrow {
+  width: 6px;
+  height: 6px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  margin-right: 6px;
+  right: -16px;
+  transform: rotate(135deg);
+}
+
+.profile-dropdown-item {
+  position: absolute;
+  bottom: -50px;
+  right: 0;
+  height: 50px;
+}
