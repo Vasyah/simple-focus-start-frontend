@@ -22,10 +22,10 @@ function App() {
         <Switch>
           <PrivateRoute exact path={'/'} component={NewsPage}/>
           <PrivateRoute path={'/update-profile'} component={UpdateProfilePage}/>
+          <PrivateRoute path={'/video'} component={VideoChatPage}/>
           <Route path={'/signup'} component={SignupPage}/>
           <Route path={'/login'} component={LoginPage}/>
           <Route path={'/forgot-password'} component={ForgotPasswordPage}/>
-          <Route path={'/video'} component={VideoChatPage}/>
         </Switch>
       </AuthProvider>
     </BrowserRouter>
