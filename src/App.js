@@ -9,6 +9,7 @@ import LoginPage from "./components/LoginPage/LoginPage";
 import UpdateProfilePage from "./components/UpdateProfile/UpdateProfilePage";
 import ForgotPasswordPage from "./components/ForgotPasswordPage/ForgotPasswordPage";
 import Header from "./components/Header/Header";
+import VideoChatPage from "./components/VideoChatPage/VideoChatPage";
 // other
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
@@ -24,6 +25,7 @@ function App() {
           <Route path={'/signup'} component={SignupPage}/>
           <Route path={'/login'} component={LoginPage}/>
           <Route path={'/forgot-password'} component={ForgotPasswordPage}/>
+          <Route path={'/video'} component={VideoChatPage}/>
         </Switch>
       </AuthProvider>
     </BrowserRouter>

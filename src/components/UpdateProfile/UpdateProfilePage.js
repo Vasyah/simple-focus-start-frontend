@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import './update-profile.scss';
 import Alert from "../Alert/Alert";
 import useValidateEmail from "../../hooks/useValidateEmail";
@@ -19,6 +19,7 @@ const UpdateProfilePage = () => {
   const [ noErrors, setNoErrors ] = useState(false);
   // other
   const { currentUser } = useAuth();
+  const history = useHistory();
   const { updateProfileErrors, loading } = useUpdateProfile(values, noErrors);
   const { emailErrors } = useValidateEmail(values.email, formSubmit);
   const { passwordErrors } = useValidatePassword(values, formSubmit);
@@ -90,7 +91,7 @@ const UpdateProfilePage = () => {
         </form>
       </div>
       <div className={'authentication-link-wrapper'}>
-        <Link to={'/'}>Отменить</Link>
+        <a href={'#'} onClick={() => history.goBack()}>Отменить</a>
       </div>
     </div>
   )

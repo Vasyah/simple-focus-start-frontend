@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import './header.scss';
 import Alert from "../Alert/Alert";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import logo from '../../assets/logo/logo_transparent.png';
+import logo from '../../assets/logo/logo-transparent-cut.png';
 
 const Header = () => {
   // ref
@@ -42,11 +42,11 @@ const Header = () => {
   return (
     <div className={'header-wrapper'}>
       <div className={'header-content container'}>
-        <div className="logo">
+        <Link to={'/'} className="logo active">
           <img className={'logo-img'} src={logo} alt="logo"/>
-        </div>
+        </Link>
         <div className="navigation">
-          NAVIGATION
+          <Link to={'/video'}>VIDEO</Link>
         </div>
         {
           currentUser &&

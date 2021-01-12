@@ -2,6 +2,7 @@
   "name": "simple",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -13,6 +14,8 @@
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "simple-peer": "^9.9.3",
+    "socket.io-client": "^3.0.5",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
