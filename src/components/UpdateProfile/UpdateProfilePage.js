@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import './update-profile.scss';
 import Alert from "../Alert/Alert";
 import useValidateEmail from "../../hooks/useValidateEmail";
@@ -91,7 +91,7 @@ const UpdateProfilePage = () => {
         </form>
       </div>
       <div className={'authentication-link-wrapper'}>
-        <a href={'#'} onClick={() => history.goBack()}>Отменить</a>
+        <p className={'authentication-link'} onClick={() => history.goBack()}>Отменить</p>
       </div>
     </div>
   )

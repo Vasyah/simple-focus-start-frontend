@@ -6,7 +6,8 @@ const AuthContext = React.createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
-  const [ currentUser, setCurrentUser ] = useState();
+  const [ currentUser, setCurrentUser ] = useState({});
+  const [ allUsers, setAllUsers ] = useState([]);
   const [ loading, setLoading ] = useState(true);
 
   const signup = (email, password) => auth.createUserWithEmailAndPassword(email, password);
@@ -23,7 +24,11 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     return auth.onAuthStateChanged(user => {
-      setCurrentUser(user);
+      setCurrentUser({
+        id: user.uid,
+        email: user.email
+      });
+      setAllUsers([])
       setLoading(false);
     });
   }, []);
