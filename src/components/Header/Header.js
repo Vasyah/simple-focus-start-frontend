@@ -29,6 +29,10 @@ const Header = () => {
     }
   }
 
+  const log = () => {
+    console.log(currentUser)
+  }
+
   const handleClickOutside = (event) => !event.path.includes(dropdownRef.current) && setIsProfileMenuOpened(false);
   const handleClickOutsideMemo = useMemo(() => handleClickOutside, []);
 
@@ -48,6 +52,7 @@ const Header = () => {
         <div className="navigation">
           <Link to={'/video'}>VIDEO</Link>
         </div>
+        <button onClick={log}>log something</button>
         {
           currentUser &&
           <div className="profile-dropdown-menu-wrapper" ref={dropdownRef}>

@@ -49,7 +49,7 @@ const VideoChatPage = () => {
   }
 
   const startVideo = () => {
-    if (this.currentUser.id) {
+    if (currentUser.id) {
       socket.current = io.connect("/");
       console.log(1)
       navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
@@ -66,8 +66,8 @@ const VideoChatPage = () => {
       //   setUsers(users);
       // })
 
-      socket.current.emit("yourID", currentUser.userId);
-      socket.current.emit("allUsers", currentUser.userId);
+      socket.current.emit("yourID", currentUser.id);
+      socket.current.emit("allUsers", currentUser.id);
 
       socket.current.on("hey", (data) => {
         setReceivingCall(true);
@@ -155,80 +155,6 @@ const VideoChatPage = () => {
       </div>
     )
   }
-
-  // old
-  // const callPeer = (id) => {
-  //   const peer = new Peer({
-  //     initiator: true,
-  //     trickle: false,
-  //     stream: this.stream,
-  //   })
-  //
-  //   peer.on('signal', data => {
-  //     this.socket.emit('callUser', {
-  //       userToCall: id,
-  //       signalData: data,
-  //       from: this.userDetails.userId,
-  //     })
-  //   })
-  //
-  //   peer.on('stream', stream => {
-  //     if (this.$refs.partnerVideo) {
-  //       this.$refs.partnerVideo.srcObject = stream
-  //     }
-  //   })
-  //
-  //   this.socket.on('callAccepted', signal => {
-  //     this.callAccepted = true
-  //     peer.signal(signal)
-  //   })
-  // }
-
-  // const acceptCall = () => {
-  //   this.callAccepted = true
-  //   const peer = new Peer({
-  //     initiator: false,
-  //     trickle: false,
-  //     stream: this.stream
-  //   })
-  //
-  //   peer.on('signal', data => {
-  //     this.socket.emit('acceptCall', {
-  //       signal: data,
-  //       to: this.caller
-  //     })
-  //   })
-  //
-  //   peer.on('stream', stream => {
-  //     this.$refs.partnerVideo.srcObject = stream
-  //   })
-  //
-  //   peer.signal(this.callerSignal)
-  // }
-
-  // const setVideo = () => {
-  //   if (this.userDetails.userId) {
-  //     // [this.video, this.audio] = [true, true]
-  //     this.socket = io.connect('http://localhost:8000')
-  //     navigator.mediaDevices.getUserMedia({ video: this.video, audio: this.audio }).then(stream => {
-  //       this.stream = stream
-  //       if (this.$refs.userVideo) {
-  //         this.$refs.userVideo.srcObject = stream
-  //       }
-  //     }).catch(error => console.error(error))
-  //
-  //     this.socket.emit("yourID", this.userDetails.userId);
-  //     this.socket.emit("allUsers", this.userDetails.userId);
-  //
-  //     this.socket.on('hey', data => {
-  //       this.receivingCall = true
-  //       this.caller = data.from
-  //       this.callerSignal = data.signal
-  //     })
-  //   }
-  // }
-
-  // old
 
   return (
     <div className={'videochat-wrapper container'}>

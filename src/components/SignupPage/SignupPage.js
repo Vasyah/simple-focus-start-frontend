@@ -8,6 +8,7 @@ import useSignup from "../../hooks/useSignup";
 
 const SignupPage = () => {
   // ref
+  const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -24,6 +25,7 @@ const SignupPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const values = {
+      name: nameRef.current.value,
       email: emailRef.current.value,
       password: passwordRef.current.value,
       passwordConfirm: passwordConfirmRef.current.value
@@ -48,31 +50,40 @@ const SignupPage = () => {
         <h1 className={'authentication-title'}>Регистрация</h1>
         {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
         <form onSubmit={handleSubmit} className={'authentication-form'}>
+          <div className="authentication-row name">
+            <label htmlFor={'name'} className={'authentication-row__label'}>Имя</label>
+            <input
+              defaultValue={'Savva2004'}
+              type="text"
+              ref={nameRef}
+              className={'authentication-row__input'}
+              id={'name'}/>
+          </div>
           <div className="authentication-row email">
-            <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
+            <label htmlFor={'email'} className={'authentication-row__label'}>Почта</label>
             <input
               defaultValue={'yakikbutovski353@gmail.com'}
               type="text"
               ref={emailRef}
-              className={'email-row__input'}
+              className={'authentication-row__input'}
               id={'email'}/>
           </div>
           <div className="authentication-row password">
-            <label htmlFor={'password'} className={'email-row__label'}>Пароль</label>
+            <label htmlFor={'password'} className={'authentication-row__label'}>Пароль</label>
             <input
               defaultValue={'123456789'}
               type="password"
               ref={passwordRef}
-              className={'email-row__input'}
+              className={'authentication-row__input'}
               id={'password'}/>
           </div>
           <div className="authentication-row password-confirm">
-            <label htmlFor={'password-confirm'} className={'email-row__label'}>Повторите пароль</label>
+            <label htmlFor={'password-confirm'} className={'authentication-row__label'}>Повторите пароль</label>
             <input
               defaultValue={'123456789'}
               type="password"
               ref={passwordConfirmRef}
-              className={'email-row__input'}
+              className={'authentication-row__input'}
               id={'password-confirm'}/>
           </div>
           <div className={'authentication-button__wrapper'}>

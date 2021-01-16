@@ -20,10 +20,11 @@ const useSignup = (values, noErrors) => {
     setSignupErrors([]);
     try {
       setLoading(true);
-      await signup(values.email, values.password);
+      await signup(values.email, values.password, values.name);
       history.push('/');
       setLoading(false);
-    } catch {
+    } catch (error) {
+      console.log(error)
       setLoading(true);
       setSignupErrors(['Не удалось создать аккаунт!']);
       setLoading(false);
