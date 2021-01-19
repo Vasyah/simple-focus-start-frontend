@@ -24,7 +24,6 @@ const useSignup = (values, noErrors) => {
       history.push('/');
       setLoading(false);
     } catch (error) {
-      console.log(error)
       setLoading(true);
       setSignupErrors(['Не удалось создать аккаунт!']);
       setLoading(false);

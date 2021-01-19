@@ -13,7 +13,7 @@ const Header = () => {
   const [ isProfileMenuOpened, setIsProfileMenuOpened ] = useState(false);
   // other
   const history = useHistory();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, allUsers, logout } = useAuth();
 
   const handleUpdate = () => {
     history.push('/update-profile');
@@ -24,13 +24,15 @@ const Header = () => {
     try {
       await logout();
       history.push('/login');
-    } catch {
-      setErrors([ 'Не удалось выйти из аккаунта!' ]);
+    } catch (error) {
+      console.error('logout error', error);
+      // setErrors([ 'Не удалось выйти из аккаунта!' ]);
     }
   }
 
   const log = () => {
-    console.log(currentUser)
+    console.log('currentUser', currentUser);
+    console.log('allUsers', allUsers);
   }
 
   const handleClickOutside = (event) => !event.path.includes(dropdownRef.current) && setIsProfileMenuOpened(false);
@@ -51,14 +53,14 @@ const Header = () => {
         </Link>
         <div className="navigation">
           <Link to={'/video'}>VIDEO</Link>
+          <button onClick={log}>log something</button>
         </div>
-        <button onClick={log}>log something</button>
         {
           currentUser &&
           <div className="profile-dropdown-menu-wrapper" ref={dropdownRef}>
             <div className="profile-dropdown-menu" onClick={() => setIsProfileMenuOpened(!isProfileMenuOpened)}>
-              <h3 className="profile-name">{currentUser.email.substring(0, currentUser.email.indexOf('@'))}</h3>
-              <div className="profile-avatar">{currentUser.email.substr(0, 1)}</div>
+              <h3 className="profile-name">{currentUser.name}</h3>
+              <div className="profile-avatar">{currentUser.name.substr(0, 1)}</div>
               <div className="profile-arrow"/>
               {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
               {isProfileMenuOpened &&

@@ -7,9 +7,11 @@ const AuthContext = React.createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export function AuthProvider({ children }) {
+  // state
   const [ currentUser, setCurrentUser ] = useState();
   const [ allUsers, setAllUsers ] = useState([]);
-  const [ loading, setLoading ] = useState(true);
+  const [ loading, setLoading ] = useState(false);
+  // other
 
   const signup = (email, password, name) => auth.createUserWithEmailAndPassword(email, password)
     .then(() => {
@@ -19,11 +21,46 @@ export function AuthProvider({ children }) {
         email: email,
         online: true
       })
-    }).catch(error => console.error('signup error', error));
+    })
+    .finally(() => {});
 
   const login = (email, password) => auth.signInWithEmailAndPassword(email, password);
 
-  const logout = () => auth.signOut();
+  const loginHandler = (user) => {
+    firebase.database().ref('users/' + user.uid).once('value', snapshot => {
+      let userDetails = snapshot.val();
+      setCurrentUser({
+        name: userDetails.name,
+        email: userDetails.email,
+        id: user.uid
+      })
+    }).finally(() => {
+      setLoading(false);
+    });
+    updateUser({
+      id: user.uid,
+      updates: {
+        email: user.email,
+        online: true
+      }
+    })
+    // getUsers();
+  }
+
+  const logoutHandler = () => {
+    updateUser({
+      id: currentUser.id,
+      updates: {
+        email: currentUser.email,
+        online: false
+      }
+    })
+    setAllUsers([]);
+    setCurrentUser();
+  }
+
+  const logout = () => auth.signOut()
+    .finally(() => logoutHandler());
 
   const resetPassword = (email) => auth.sendPasswordResetEmail(email);
 
@@ -32,14 +69,14 @@ export function AuthProvider({ children }) {
   const updatePassword = (password) => currentUser.updatePassword(password);
 
   const updateUser = (payload) => {
-    if (payload.userId) firebase.database().ref('users/' + payload.id).update(payload.updates);
+    if (payload.id) firebase.database().ref('users/' + payload.id).update(payload.updates);
   }
 
   const getUsers = () => {
     firebase.database().ref('users').on('child_added', snapshot => {
       const userDetails = snapshot.val();
       let id = snapshot.key;
-      setAllUsers([...allUsers, { id, userDetails }]);
+      setAllUsers([ ...allUsers, { id, userDetails } ]);
     });
     firebase.database().ref('users').on('child_changed', snapshot => {
       const userDetails = snapshot.val();
@@ -47,45 +84,73 @@ export function AuthProvider({ children }) {
       updateUser({ id, userDetails });
     });
   }
+// eslint-disable-next-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    return auth.onAuthStateChanged(user => {
+    setLoading(true);
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        // firebase.database().ref('users/' + user.uid).once('value', snapshot => {
-        //   let userDetails = snapshot.val();
-        //   setCurrentUser({
-        //     name: userDetails.name,
-        //     email: userDetails.email,
-        //     userId: user.uid
-        //   })
-        // })
-
-        // updateUser({
-        //   id: user.uid,
-        //   updates: {
-        //     email: user.email,
-        //     online: true
-        //   }
-        // })
-        // getUsers();
+        loginHandler(user);
       } else {
-        // updateUser({
-        //   id: currentUser.id,
-        //   updates: {
-        //     email: currentUser.email,
-        //     online: false
-        //   }
-        // })
-        setCurrentUser();
+        logoutHandler();
       }
-      // setAllUsers([])
-      setLoading(false);
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    console.log(currentUser);
+  }, [currentUser])
+
+  // const handleOnAuthStateChanged = () => {
+  //   firebase.auth().onAuthStateChanged(user => {
+  //     setLoading(true);
+  //     if (user) {
+  //       firebase.database().ref('users/' + user.uid).once('value', snapshot => {
+  //         let userDetails = snapshot.val();
+  //         setCurrentUser({
+  //           name: userDetails.name,
+  //           email: userDetails.email,
+  //           id: user.uid
+  //         })
+  //       })
+  //       updateUser({
+  //         id: user.uid,
+  //         updates: {
+  //           email: user.email,
+  //           online: true
+  //         }
+  //       })
+  //       getUsers();
+  //     } else {
+  //       console.log(currentUser);
+  //       updateUser({
+  //         id: currentUser.id,
+  //         updates: {
+  //           email: currentUser.email,
+  //           online: false
+  //         }
+  //       })
+  //       setAllUsers([]);
+  //       setCurrentUser();
+  //     }
+  //     setLoading(false);
+  //   });
+  // }
+  //
+
+  // const getUser = () => {
+  //   return new Promise((resolve) => {
+  //     if (currentUser) {
+  //       resolve(currentUser);
+  //       console.log(currentUser);
+  //     }
+  //   })
+  // }
 
   const value = {
     currentUser,
+    allUsers,
     login,
     signup,
     logout,

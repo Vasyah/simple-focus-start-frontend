@@ -20,9 +20,10 @@ const useLogin = (values, noErrors) => {
     setLoginErrors([]);
     try {
       setLoading(true);
-      await login(values.email, values.password);
-      history.push('/');
-      setLoading(false);
+      login(values.email, values.password).then(() => {
+        history.push('/');
+        setLoading(false);
+      })
     } catch {
       setLoading(true);
       setLoginErrors(['Не удалось войти в аккаунт!']);
