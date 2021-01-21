@@ -61,7 +61,7 @@ export function AuthProvider({ children }) {
 
   const getUser = (user) => {
     if (!user) user = auth.currentUser;
-    return firebase.database().ref('users/' + user.uid).once('value').then(snapshot => {
+    return firebase.database().ref(`users/${user.uid}`).once('value').then(snapshot => {
       let userDetails = snapshot.val();
       const updatedUser = {
         name: userDetails.name,
@@ -115,7 +115,7 @@ export function AuthProvider({ children }) {
   // update actions
 
   const updateUser = (payload) => {
-    if (payload.id) firebase.database().ref('users/' + payload.id)
+    if (payload.id) firebase.database().ref(`users/${payload.id}`)
       .update(payload.updates)
       .finally(() => {
         console.log('user updated');

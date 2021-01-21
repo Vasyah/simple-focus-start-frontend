@@ -10,19 +10,17 @@ const VideoChatPage = () => {
   const partnerVideo = useRef();
   const socket = useRef();
   // state
-  const [ yourID, setYourID ] = useState("");
-  const [ users, setUsers ] = useState({});
   const [ stream, setStream ] = useState();
   const [ receivingCall, setReceivingCall ] = useState(false);
   const [ caller, setCaller ] = useState("");
   const [ callerSignal, setCallerSignal ] = useState();
   const [ callAccepted, setCallAccepted ] = useState(false);
   // other
-  const { currentUser } = useAuth();
+  const { currentUser, allUsers } = useAuth();
 
   useEffect(() => {
     startVideo();
-  }, []);
+  }, [ currentUser ]);
 
   const stopVideo = () => {
     if (userVideo.current) {
@@ -49,7 +47,7 @@ const VideoChatPage = () => {
   }
 
   const startVideo = () => {
-    if (currentUser.id) {
+    if (currentUser) {
       socket.current = io.connect("/");
       console.log(1)
       navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
@@ -85,7 +83,7 @@ const VideoChatPage = () => {
     });
 
     peer.on('signal', data => {
-      socket.emit('callUser', {
+      socket.current.emit('callUser', {
         userToCall: id,
         signalData: data,
         from: currentUser.id,
@@ -164,13 +162,12 @@ const VideoChatPage = () => {
           {PartnerVideo}
         </div>
         <div>
-          {Object.keys(users).map(key => {
-            if (key === yourID) {
-              console.log(key)
-              return null;
-            }
+          {allUsers.map(user => {
+            // if (user.id === yourID) {
+            //   return null;
+            // }
             return (
-              <button key={yourID} onClick={() => callPeer(key)}>Call {key}</button>
+              <button key={user.id} onClick={() => callPeer(user.id)}>Call {user.id} { user.name }</button>
             );
           })}
           <button onClick={stopVideo}>stop video</button>

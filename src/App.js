@@ -1,7 +1,7 @@
 // base
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import './App.scss';
+import './app.scss';
 // other
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
@@ -23,15 +23,17 @@ function App() {
         <Header/>
         <Switch>
           <PrivateRoute exact path={'/'} render={() => (
-            <>
-              <NewsPage/>
-              <Users/>
-            </>
+            <div className={'container'}>
+              <div className={'main-page'}>
+                <div className={'users'}><Users/></div>
+                <div className={'news'}><NewsPage/></div>
+                {/*<div className={'news'}></div>*/}
+              </div>
+            </div>
           )}/>
-          {/*<Route render={() => {Users()}} />*/}
           <PrivateRoute path={'/update-profile'} component={UpdateProfilePage}/>
           <PrivateRoute path={'/video'} component={VideoChatPage}/>
-          <Route path={'/signup'} component={SignupPage} />
+          <Route path={'/signup'} component={SignupPage}/>
           <Route path={'/login'} component={LoginPage}/>
           <Route path={'/forgot-password'} component={ForgotPasswordPage}/>
         </Switch>

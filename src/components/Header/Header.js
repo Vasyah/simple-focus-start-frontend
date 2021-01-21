@@ -35,7 +35,7 @@ const Header = () => {
     console.log('allUsers', allUsers);
   }
 
-  const handleClickOutside = (event) => !event.path.includes(dropdownRef.current) && setIsProfileMenuOpened(false);
+  const handleClickOutside = (event) => !event.composedPath().includes(dropdownRef.current) && setIsProfileMenuOpened(false);
   const handleClickOutsideMemo = useMemo(() => handleClickOutside, []);
 
   useEffect(() => {
