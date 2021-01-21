@@ -21,12 +21,17 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <Header/>
-        <Users/>
         <Switch>
-          <PrivateRoute exact path={'/'} component={NewsPage}/>
+          <PrivateRoute exact path={'/'} render={() => (
+            <>
+              <NewsPage/>
+              <Users/>
+            </>
+          )}/>
+          {/*<Route render={() => {Users()}} />*/}
           <PrivateRoute path={'/update-profile'} component={UpdateProfilePage}/>
           <PrivateRoute path={'/video'} component={VideoChatPage}/>
-          <Route path={'/signup'} component={SignupPage}/>
+          <Route path={'/signup'} component={SignupPage} />
           <Route path={'/login'} component={LoginPage}/>
           <Route path={'/forgot-password'} component={ForgotPasswordPage}/>
         </Switch>

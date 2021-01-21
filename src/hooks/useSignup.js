@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
 
 const useSignup = (values, noErrors) => {
   // state
@@ -8,7 +7,6 @@ const useSignup = (values, noErrors) => {
   const [ loading, setLoading ] = useState(false);
   // other
   const { signup } = useAuth();
-  const history = useHistory();
 
   useEffect(() => {
     if (!noErrors) return;
@@ -21,7 +19,6 @@ const useSignup = (values, noErrors) => {
     try {
       setLoading(true);
       await signup(values.email, values.password, values.name);
-      history.push('/');
       setLoading(false);
     } catch (error) {
       setLoading(true);

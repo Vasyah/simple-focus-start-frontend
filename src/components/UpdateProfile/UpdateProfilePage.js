@@ -39,7 +39,6 @@ const UpdateProfilePage = () => {
     const messages = [ ...emailErrors ];
     if (values.password) messages.push(...passwordErrors);
     if (!messages.length && formSubmit) {
-      console.log('1')
       setNoErrors(true);
       messages.push(...updateProfileErrors);
     }
