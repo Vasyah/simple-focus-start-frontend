@@ -14,29 +14,32 @@ import ForgotPasswordPage from "./components/ForgotPasswordPage/ForgotPasswordPa
 import Header from "./components/Header/Header";
 import VideoChatPage from "./components/VideoChatPage/VideoChatPage";
 import Users from "./components/Users/Users";
+import { VideoProvider } from "./contexts/VideoContext";
 
 function App() {
 
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Header/>
-        <Switch>
-          <PrivateRoute exact path={'/'} render={() => (
-            <div className={'container'}>
-              <div className={'main-page'}>
-                <div className={'users'}><Users/></div>
-                <div className={'news'}><NewsPage/></div>
-                {/*<div className={'news'}></div>*/}
+        <VideoProvider>
+          <Header/>
+          <Switch>
+            <PrivateRoute exact path={'/'} render={() => (
+              <div className={'container'}>
+                <div className={'main-page'}>
+                  <div className={'users'}><Users/></div>
+                  <div className={'news'}><NewsPage/></div>
+                  {/*<div className={'news'}></div>*/}
+                </div>
               </div>
-            </div>
-          )}/>
-          <PrivateRoute path={'/update-profile'} component={UpdateProfilePage}/>
-          <PrivateRoute path={'/video'} component={VideoChatPage}/>
-          <Route path={'/signup'} component={SignupPage}/>
-          <Route path={'/login'} component={LoginPage}/>
-          <Route path={'/forgot-password'} component={ForgotPasswordPage}/>
-        </Switch>
+            )}/>
+            <PrivateRoute path={'/update-profile'} component={UpdateProfilePage}/>
+            <PrivateRoute path={'/video'} render={() => <VideoChatPage />}/>
+            <Route path={'/signup'} component={SignupPage}/>
+            <Route path={'/login'} component={LoginPage}/>
+            <Route path={'/forgot-password'} component={ForgotPasswordPage}/>
+          </Switch>
+        </VideoProvider>
       </AuthProvider>
     </BrowserRouter>
   );

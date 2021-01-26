@@ -24,7 +24,7 @@ const PrivateRoute = ({ render: Component, ...rest }) => {
       render={props => loading
         ? <>
           <Loading/>
-          <Delayed waitBeforeShow={3000}>{redirect}</Delayed>
+          <Delayed waitBeforeShow={10000}>{redirect}</Delayed>
         </>
         : currentUser
           ? <Component {...props} />

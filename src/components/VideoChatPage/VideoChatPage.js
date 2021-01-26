@@ -3,6 +3,8 @@ import io from "socket.io-client";
 import Peer from "simple-peer";
 import './video-chat-page.scss';
 import { useAuth } from "../../contexts/AuthContext";
+import { useHistory, useLocation, Prompt } from "react-router-dom";
+import { useVideo } from "../../contexts/VideoContext";
 
 const VideoChatPage = () => {
   // ref
@@ -10,125 +12,22 @@ const VideoChatPage = () => {
   const partnerVideo = useRef();
   const socket = useRef();
   // state
-  const [ stream, setStream ] = useState();
-  const [ receivingCall, setReceivingCall ] = useState(false);
-  const [ caller, setCaller ] = useState("");
-  const [ callerSignal, setCallerSignal ] = useState();
-  const [ callAccepted, setCallAccepted ] = useState(false);
   // other
+  const history = useHistory();
+  const {
+    // state
+    receivingCall,
+    callAccepted,
+    stream,
+    caller,
+    // actions
+    stopCurrentUserVideo,
+    stopCall,
+    startVideo,
+    callPeer,
+    acceptCall
+  } = useVideo();
   const { currentUser, allUsers } = useAuth();
-
-  useEffect(() => {
-    startVideo();
-  }, [ currentUser ]);
-
-  const stopVideo = () => {
-    if (userVideo.current) {
-      let tracks = userVideo.current.srcObject.getTracks();
-      tracks.forEach(function (track) {
-        track.stop();
-      });
-      userVideo.current.srcObject = null;
-    }
-  }
-
-  const stopCall = () => {
-    if (userVideo.current && partnerVideo.current) {
-      let videos = [];
-      videos.push(partnerVideo.current.srcObject.getTracks(), userVideo.current.srcObject.getTracks());
-      videos.forEach(tracks => {
-        tracks.forEach(function (track) {
-          track.stop();
-        });
-      })
-      userVideo.current.srcObject = null;
-      partnerVideo.current.srcObject = null;
-    }
-  }
-
-  const startVideo = () => {
-    if (currentUser) {
-      socket.current = io.connect("/");
-      console.log(1)
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
-        setStream(stream);
-        if (userVideo.current) {
-          userVideo.current.srcObject = stream;
-        }
-      })
-
-      // socket.current.on("yourID", (id) => {
-      //   setYourID(id);
-      // })
-      // socket.current.on("allUsers", (users) => {
-      //   setUsers(users);
-      // })
-
-      socket.current.emit("yourID", currentUser.id);
-      socket.current.emit("allUsers", currentUser.id);
-
-      socket.current.on("hey", (data) => {
-        setReceivingCall(true);
-        setCaller(data.from);
-        setCallerSignal(data.signal);
-      })
-    }
-  }
-
-  const callPeer = id => {
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: stream,
-    });
-
-    peer.on('signal', data => {
-      socket.current.emit('callUser', {
-        userToCall: id,
-        signalData: data,
-        from: currentUser.id,
-      })
-    })
-
-    peer.on("stream", stream => {
-      if (partnerVideo.current) {
-        partnerVideo.current.srcObject = stream;
-      }
-    });
-
-    socket.current.on("callAccepted", signal => {
-      setCallAccepted(true);
-      peer.signal(signal);
-    })
-
-  }
-
-  const acceptCall = () => {
-    setCallAccepted(true);
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream,
-    });
-
-    peer.on('signal', data => {
-      socket.current.emit('acceptCall', {
-        signal: data,
-        to: caller
-      })
-    })
-
-    peer.on("stream", stream => {
-      partnerVideo.current.srcObject = stream;
-    });
-
-    peer.signal(callerSignal);
-  }
-
-  const log = () => {
-    console.log('partnerVideo', partnerVideo);
-    console.log('currentUser', currentUser);
-  }
 
   let UserVideo;
   if (stream) {
@@ -144,39 +43,77 @@ const VideoChatPage = () => {
     );
   }
 
-  let incomingCall;
-  if (receivingCall) {
-    incomingCall = (
+  let IncomingCall;
+  if (receivingCall && !callAccepted) {
+    IncomingCall = (
       <div>
         <h1>{caller} is calling you</h1>
-        <button onClick={acceptCall}>Accept</button>
+        <button onClick={() => {
+          acceptCall(socket, partnerVideo)
+        }}>
+          Accept
+        </button>
       </div>
     )
   }
 
+  useEffect(() => {
+    return () => {
+      console.log('video unmount')
+    }
+  }, []);
+
+  useEffect(() => {
+    startVideo(socket, userVideo);
+  }, [ currentUser ]);
+
   return (
     <div className={'videochat-wrapper container'}>
       <div className={'videochat'}>
+        <Prompt
+          when={!!stream}
+          message={(() => {
+            if (!!stream) {
+              stopCall(userVideo.current, partnerVideo.current);
+            }
+            return true;
+          })}
+        />
         <div>
           {UserVideo}
           {PartnerVideo}
         </div>
         <div>
           {allUsers.map(user => {
-            // if (user.id === yourID) {
-            //   return null;
-            // }
+            if (user.id === currentUser.id) {
+              return null;
+            }
             return (
-              <button key={user.id} onClick={() => callPeer(user.id)}>Call {user.id} { user.name }</button>
+              <button
+                key={user.id}
+                onClick={() => callPeer(user.id, socket, partnerVideo)}>
+                Call {user.id} {user.name}
+              </button>
             );
           })}
-          <button onClick={stopVideo}>stop video</button>
-          <button onClick={startVideo}>start video</button>
-          <button onClick={stopCall}>stop call</button>
-          <button onClick={log}>log something</button>
+          <button onClick={() => {
+            stopCurrentUserVideo(userVideo.current);
+          }}>
+            stop video
+          </button>
+          <button onClick={() => {
+            startVideo(socket, userVideo)
+          }}>
+            start video
+          </button>
+          <button onClick={() => {
+            stopCall(userVideo.current, partnerVideo.current);
+          }}>
+            stop call
+          </button>
         </div>
         <div>
-          {incomingCall}
+          {IncomingCall}
         </div>
       </div>
     </div>
