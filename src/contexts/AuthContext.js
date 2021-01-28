@@ -3,7 +3,7 @@ import { auth } from "../firebase";
 import firebase from 'firebase';
 import { useHistory } from "react-router-dom";
 
-const AuthContext = React.createContext();
+const AuthContext = React.createContext(undefined, undefined);
 
 export const useAuth = () => useContext(AuthContext);
 

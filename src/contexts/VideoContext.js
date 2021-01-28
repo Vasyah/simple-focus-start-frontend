@@ -4,7 +4,7 @@ import { useAuth } from "./AuthContext";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 
-const VideoContext = React.createContext();
+const VideoContext = React.createContext(undefined, undefined);
 
 export const useVideo = () => useContext(VideoContext);
 
@@ -16,12 +16,12 @@ export function VideoProvider({ children }) {
   const [ callerSignal, setCallerSignal ] = useState();
   const [ callAccepted, setCallAccepted ] = useState(false);
   const [ loading, setLoading ] = useState(false);
+  const [ socket, setSocket ] = useState();
   // other
   const { currentUser } = useAuth();
 
   const stopCurrentUserVideo = (userVideo) => {
     if (userVideo && userVideo.srcObject) {
-      console.log('userVideo', userVideo)
       let tracks = userVideo.srcObject.getTracks();
       tracks.forEach(track => {
         track.stop();
@@ -32,7 +32,6 @@ export function VideoProvider({ children }) {
 
   const stopOtherUserVideo = (partnerVideo) => {
     if (partnerVideo && partnerVideo.srcObject) {
-      console.log('partnerVideo', partnerVideo)
       let tracks = partnerVideo.srcObject.getTracks();
       tracks.forEach(track => {
         track.stop();
@@ -44,32 +43,51 @@ export function VideoProvider({ children }) {
   const stopCall = (userVideo, partnerVideo) => {
     stopCurrentUserVideo(userVideo);
     stopOtherUserVideo(partnerVideo);
+    declineCall();
+  }
+
+  const declineCall = () => {
     setCallAccepted(false);
     setReceivingCall(false);
   }
 
-  const startVideo = (socket, userVideo) => {
+  const startListen = () => {
+    // сюда мб
+    const socket = io.connect("/");
     if (currentUser) {
-      socket.current = io.connect("/");
+      socket.emit("yourID", currentUser.id);
+      socket.emit("allUsers", currentUser.id);
+
+      socket.on("hey", (data) => {
+        setReceivingCall(true);
+        setCaller({ from: data.from, data });
+        setCallerSignal(data.signal);
+      })
+    }
+
+    setSocket(socket);
+  }
+
+  const startVideo = (userVideo) => {
+    if (currentUser) {
       navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(stream => {
         setStream(stream);
         if (userVideo.current) {
           userVideo.current.srcObject = stream;
         }
 
-        socket.current.emit("yourID", currentUser.id);
-        socket.current.emit("allUsers", currentUser.id);
-
-        socket.current.on("hey", (data) => {
-          setReceivingCall(true);
-          setCaller(data.from);
-          setCallerSignal(data.signal);
-        })
+        if (socket) {
+          socket.on("hey", (data) => {
+            setReceivingCall(true);
+            setCaller({ from: data.from, data });
+            setCallerSignal(data.signal);
+          })
+        }
       })
     }
   }
 
-  const callPeer = (id, socket, partnerVideo) => {
+  const callPeer = (id, partnerVideo) => {
     console.log('срабатывает у того кто звонит');
     const peer = new Peer({
       initiator: true,
@@ -78,7 +96,7 @@ export function VideoProvider({ children }) {
     });
 
     peer.on('signal', data => {
-      socket.current.emit('callUser', {
+      socket.emit('callUser', {
         userToCall: id,
         signalData: data,
         from: currentUser.id,
@@ -91,14 +109,14 @@ export function VideoProvider({ children }) {
       }
     });
 
-    socket.current.on("callAccepted", signal => {
+    socket.on("callAccepted", signal => {
       setCallAccepted(true);
       peer.signal(signal);
     })
 
   }
 
-  const acceptCall = (socket, partnerVideo) => {
+  const acceptCall = (partnerVideo) => {
     console.log('срабатывает у того кому звонят')
     setCallAccepted(true);
     const peer = new Peer({
@@ -108,9 +126,9 @@ export function VideoProvider({ children }) {
     });
 
     peer.on('signal', data => {
-      socket.current.emit('acceptCall', {
+      socket.emit('acceptCall', {
         signal: data,
-        to: caller
+        to: caller.from
       })
     })
 
@@ -134,6 +152,8 @@ export function VideoProvider({ children }) {
     startVideo,
     callPeer,
     acceptCall,
+    declineCall,
+    startListen
   }
 
   return (

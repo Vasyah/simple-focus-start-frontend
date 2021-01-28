@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { useAuth } from "./AuthContext";
 
-const MessagesContext = React.createContext();
+const MessagesContext = React.createContext(undefined, undefined);
 
 export const useMessages = () => useContext(MessagesContext);
 

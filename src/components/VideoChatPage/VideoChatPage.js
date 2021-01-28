@@ -5,15 +5,16 @@ import './video-chat-page.scss';
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory, useLocation, Prompt } from "react-router-dom";
 import { useVideo } from "../../contexts/VideoContext";
+import { useGlobalPopup } from "../../contexts/GlobalPopupContext";
 
 const VideoChatPage = () => {
   // ref
   const userVideo = useRef();
   const partnerVideo = useRef();
-  const socket = useRef();
   // state
   // other
   const history = useHistory();
+  const { addMessage } = useGlobalPopup();
   const {
     // state
     receivingCall,
@@ -44,18 +45,23 @@ const VideoChatPage = () => {
   }
 
   let IncomingCall;
-  if (receivingCall && !callAccepted) {
+  if (receivingCall && !callAccepted && caller) {
     IncomingCall = (
       <div>
-        <h1>{caller} is calling you</h1>
+        <h1>accept</h1>
         <button onClick={() => {
-          acceptCall(socket, partnerVideo)
+
         }}>
           Accept
         </button>
       </div>
     )
   }
+  useEffect(() => {
+    if (receivingCall && !callAccepted && caller) {
+      return acceptCall(partnerVideo);
+    }
+  }, [receivingCall, callAccepted, caller, partnerVideo, acceptCall]);
 
   useEffect(() => {
     return () => {
@@ -64,7 +70,7 @@ const VideoChatPage = () => {
   }, []);
 
   useEffect(() => {
-    startVideo(socket, userVideo);
+    startVideo(userVideo);
   }, [ currentUser ]);
 
   return (
@@ -72,8 +78,9 @@ const VideoChatPage = () => {
       <div className={'videochat'}>
         <Prompt
           when={!!stream}
-          message={(() => {
-            if (!!stream) {
+          message={((location) => {
+            if (!!stream && location.pathname !== '/video') {
+              console.log('webcam stop');
               stopCall(userVideo.current, partnerVideo.current);
             }
             return true;
@@ -91,7 +98,9 @@ const VideoChatPage = () => {
             return (
               <button
                 key={user.id}
-                onClick={() => callPeer(user.id, socket, partnerVideo)}>
+                onClick={() => {
+                  callPeer(user.id, partnerVideo);
+                }}>
                 Call {user.id} {user.name}
               </button>
             );
@@ -102,7 +111,7 @@ const VideoChatPage = () => {
             stop video
           </button>
           <button onClick={() => {
-            startVideo(socket, userVideo)
+            startVideo(userVideo)
           }}>
             start video
           </button>
