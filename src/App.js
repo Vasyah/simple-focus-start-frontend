@@ -21,6 +21,7 @@ import VideoChatPage from "./components/VideoChatPage/VideoChatPage";
 import GlobalPopup from "./components/GlobalPopup/GlobalPopup";
 import StartListenServer from "./components/StartListenServer/StartListenServer";
 import Loading from "./components/Loading/Loading";
+import ChatPage from "./components/ChatPage/ChatPage";
 
 function App() {
 
@@ -37,9 +38,9 @@ function App() {
               <Switch>
                 <PrivateRoute exact path={'/'} render={() => (
                   <div className={'container'}>
-                    <div className={'main-page'}>
-                      <div className={'users'}><Users/></div>
-                      <div className={'news'}><NewsPage/></div>
+                    <div className={'flex-container'}>
+                      <div className={'flex-item-left'}><Users/></div>
+                      <div className={'flex-item-middle'}><NewsPage/></div>
                     </div>
                   </div>
                 )}/>
@@ -49,6 +50,14 @@ function App() {
                 <PrivateRoute path={'/video'} render={() =>
                     <VideoChatPage/>
                 }/>
+                <PrivateRoute path={'/chat/:id'} render={() => (
+                  <div className={'container'}>
+                    <div className={'flex-container'}>
+                      <div className={'flex-item-left'}><Users/></div>
+                      <div className={'flex-item-middle'}><ChatPage/></div>
+                    </div>
+                  </div>
+                )}/>
                 <Route path={'/signup'} component={SignupPage}/>
                 <Route path={'/login'} component={LoginPage}/>
                 <Route path={'/forgot-password'} component={ForgotPasswordPage}/>

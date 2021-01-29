@@ -15,19 +15,28 @@ export function MessagesProvider({ children }) {
   const sendMessage = (payload) => {
     firebase.database()
       .ref(`chats/${currentUser.id}/${payload.otherUserId}`)
-      .push(payload.message);
+      .push(payload.messageInfo);
     firebase.database()
       .ref(`chats/${payload.otherUserId}/${currentUser.id}`)
-      .push(payload.message);
+      .push(payload.messageInfo);
   }
 
   const getMessages = (otherUserId) => {
+    const messages = [];
     messagesRef = firebase.database().ref('chats/' + currentUser.id + '/' + otherUserId);
     messagesRef.on('child_added', snapshot => {
       let messageDetails = snapshot.val();
       let messageId = snapshot.key;
-      setMessages([...messages, {messageId, messageDetails}]);
+      messages.push({
+        messageDetails,
+        messageId
+      })
+      Promise.all(messages).then(() => {
+        setMessages(messages)
+      })
+      // setMessages(messages);
     })
+    // console.log(messages);
   }
 
   const stopGettingMessages = () => {
@@ -35,10 +44,17 @@ export function MessagesProvider({ children }) {
   }
 
   useEffect(() => {
-    console.log('messages', messages);
+    // console.log('messages', messages);
   }, [messages]);
 
-  const value = {}
+  const value = {
+    // state
+    messages,
+    // actions
+    sendMessage,
+    getMessages,
+    stopGettingMessages
+  }
 
   return (
     <MessagesContext.Provider value={value}>

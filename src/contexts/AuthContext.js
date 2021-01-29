@@ -11,7 +11,10 @@ export function AuthProvider({ children }) {
   // state
   const [ currentUserFull, setCurrentUserFull ] = useState();
   const [ currentUser, setCurrentUser ] = useState();
+  
   const [ allUsers, setAllUsers ] = useState([]);
+  const [ allUsersWithoutMe, setAllUsersWithoutMe ] = useState([]);
+  const [ allUsersOnline, setAllUsersOnline ] = useState([]);
   // const [ loading, setLoading ] = useState(false); // мб потом использую
   // const [ loginAction, setLoginAction ] = useState(false);
   const [ logoutAction, setLogoutAction ] = useState(false);
@@ -149,6 +152,20 @@ export function AuthProvider({ children }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  
+  useEffect(() => {
+    if (currentUser && allUsers) {
+      const usersFiltered = allUsers.filter(user => user.id !== currentUser.id);
+      setAllUsersWithoutMe(usersFiltered);
+    }
+  }, [currentUser, allUsers]);
+
+  // useEffect(() => {
+  //   if (currentUser && allUsers) {
+  //     const usersFiltered = allUsers.filter(user => user.online);
+  //     setAllUsersOnline(usersFiltered);
+  //   }
+  // }, [allUsers, currentUser]);
 
   // playground
 
@@ -231,6 +248,7 @@ export function AuthProvider({ children }) {
     // state
     currentUser,
     allUsers,
+    allUsersWithoutMe,
     // login actions
     login,
     signup,

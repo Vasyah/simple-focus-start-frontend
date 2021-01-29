@@ -10,12 +10,6 @@ const GlobalPopup = () => {
   const { allUsers } = useAuth();
   const history = useHistory();
 
-  const log = () => {
-    console.log('receivingCall', receivingCall);
-    console.log('callAccepted', callAccepted);
-    console.log('caller', caller);
-  }
-
   const handleDecline = () => {
     declineCall();
   };
@@ -74,7 +68,6 @@ const GlobalPopup = () => {
 
   return (
     <>
-      <button onClick={log}>log</button>
       {!!message && popupType()}
     </>
   )

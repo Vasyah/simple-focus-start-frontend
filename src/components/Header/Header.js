@@ -30,11 +30,6 @@ const Header = () => {
     }
   }
 
-  const log = () => {
-    console.log('currentUser', currentUser);
-    console.log('allUsers', allUsers);
-  }
-
   const handleClickOutside = (event) => !event.composedPath().includes(dropdownRef.current) && setIsProfileMenuOpened(false);
   const handleClickOutsideMemo = useMemo(() => handleClickOutside, []);
 
@@ -53,7 +48,6 @@ const Header = () => {
         </Link>
         <div className="navigation">
           <Link to={'/video'}>VIDEO</Link>
-          <button onClick={log}>log something</button>
         </div>
         {
           currentUser &&

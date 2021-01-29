@@ -1,16 +1,19 @@
 import React from 'react';
 import { useAuth } from "../../contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Users = () => {
-  const { allUsers } = useAuth();
+  const { allUsers, currentUser, allUsersWithoutMe } = useAuth();
 
   return (
     <>
-      {allUsers.map(user => (
+      {allUsersWithoutMe.map(user => {
+        return (
           <div key={user.id}>
-            <span>{user.name}</span>
+            <Link to={`/chat/${user.id}`}>{user.name}</Link>
           </div>
-        ))
+        )
+      })
       }
     </>
   )

@@ -50,18 +50,19 @@ const VideoChatPage = () => {
       <div>
         <h1>accept</h1>
         <button onClick={() => {
-
+          acceptCall(partnerVideo);
         }}>
           Accept
         </button>
       </div>
     )
   }
-  useEffect(() => {
-    if (receivingCall && !callAccepted && caller) {
-      return acceptCall(partnerVideo);
-    }
-  }, [receivingCall, callAccepted, caller, partnerVideo, acceptCall]);
+
+  // useEffect(() => {
+  //   if (receivingCall && !callAccepted && caller) {
+  //     return acceptCall(partnerVideo);
+  //   }
+  // }, [receivingCall, callAccepted, caller, partnerVideo, acceptCall]);
 
   useEffect(() => {
     return () => {
