@@ -5,23 +5,22 @@ import './app.scss';
 // components
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Header from "./components/Header/Header";
+import GlobalPopup from "./components/GlobalPopup/GlobalPopup";
 import Users from "./components/Users/Users";
+import StartListenServer from "./components/StartListenServer/StartListenServer";
 // context
 import { AuthProvider } from "./contexts/AuthContext";
 import { GlobalPopupProvider } from "./contexts/GlobalPopupContext";
 import { VideoProvider } from "./contexts/VideoContext";
 import { MessagesProvider } from "./contexts/MessagesContext";
 // pages
-import NewsPage from "./components/NewsPage/NewsPage";
-import SignupPage from "./components/SignupPage/SignupPage";
-import LoginPage from "./components/LoginPage/LoginPage";
-import UpdateProfilePage from "./components/UpdateProfile/UpdateProfilePage";
-import ForgotPasswordPage from "./components/ForgotPasswordPage/ForgotPasswordPage";
-import VideoChatPage from "./components/VideoChatPage/VideoChatPage";
-import GlobalPopup from "./components/GlobalPopup/GlobalPopup";
-import StartListenServer from "./components/StartListenServer/StartListenServer";
-import Loading from "./components/Loading/Loading";
-import ChatPage from "./components/ChatPage/ChatPage";
+import ChatPage from "./pages/ChatPage/ChatPage";
+import VideoChatPage from "./pages/VideoChatPage/VideoChatPage";
+import UpdateProfilePage from "./pages/UpdateProfilePage/UpdateProfilePage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage/ForgotPasswordPage";
+import NewsPage from "./pages/NewsPage/NewsPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import SignupPage from "./pages/SignupPage/SignupPage";
 
 function App() {
 

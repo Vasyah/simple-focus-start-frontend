@@ -22,7 +22,7 @@ export function VideoProvider({ children }) {
 
   const stopCurrentUserVideo = (userVideo) => {
     if (userVideo && userVideo.srcObject) {
-      let tracks = userVideo.srcObject.getTracks();
+      const tracks = userVideo.srcObject.getTracks();
       tracks.forEach(track => {
         track.stop();
       });
@@ -32,7 +32,7 @@ export function VideoProvider({ children }) {
 
   const stopOtherUserVideo = (partnerVideo) => {
     if (partnerVideo && partnerVideo.srcObject) {
-      let tracks = partnerVideo.srcObject.getTracks();
+      const tracks = partnerVideo.srcObject.getTracks();
       tracks.forEach(track => {
         track.stop();
       });

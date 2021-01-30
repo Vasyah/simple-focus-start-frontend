@@ -1,51 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import './login-page.scss';
-import Alert from "../Alert/Alert";
+import './forgot-password-page.scss';
+import Alert from "../../components/Alert/Alert";
+import useForgotPassword from "../../hooks/useForgotPassword";
 import useValidateEmail from "../../hooks/useValidateEmail";
-import useValidatePassword from "../../hooks/useValidatePassword";
-import useLogin from "../../hooks/useLogin";
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   // ref
   const emailRef = useRef();
-  const passwordRef = useRef();
   // state
   const [ values, setValues ] = useState({});
   const [ errors, setErrors ] = useState([]);
   const [ formSubmit, setFormSubmit ] = useState(false);
   const [ noErrors, setNoErrors ] = useState(false);
   // other
-  const { loginErrors, loading } = useLogin(values, noErrors);
+  const { resetErrors, messages, loading } = useForgotPassword(values.email, noErrors);
   const { emailErrors } = useValidateEmail(values.email, formSubmit);
-  const { passwordErrors } = useValidatePassword(values, formSubmit);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const values = {
       email: emailRef.current.value,
-      password: passwordRef.current.value,
     }
     setValues(values);
     setFormSubmit(true);
   }
 
   useEffect(() => {
-    const messages = [ ...passwordErrors, ...emailErrors ];
+    const messages = [ ...emailErrors ];
     if (!messages.length && formSubmit) {
       setNoErrors(true);
-      messages.push(...loginErrors);
+      messages.push(...resetErrors);
     }
     setErrors(messages);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ emailErrors, passwordErrors, loginErrors ]);
-
+  }, [emailErrors, resetErrors]);
 
   return (
     <div className={'authentication-wrapper'}>
       <div className={'authentication-form-wrapper'}>
-        <h1 className={'authentication-title'}>Вход</h1>
+        <h1 className={'authentication-title'}>Сброс пароля</h1>
         {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
+        {messages.length !== 0 && <Alert messages={messages} type={'success'}/>}
         <form onSubmit={handleSubmit} className={'authentication-form'}>
           <div className="authentication-row email">
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
@@ -56,33 +52,24 @@ const LoginPage = () => {
               className={'email-row__input'}
               id={'email'}/>
           </div>
-          <div className="authentication-row password">
-            <label htmlFor={'password'} className={'email-row__label'}>Пароль</label>
-            <input
-              defaultValue={'123456789'}
-              type="password"
-              ref={passwordRef}
-              className={'email-row__input'}
-              id={'password'}/>
-          </div>
           <div className={'authentication-button__wrapper'}>
             <button
               disabled={loading}
               type={'submit'}
               className={'authentication-button button-blue'}>
-              Войти
+              Сбросить пароль
             </button>
           </div>
         </form>
         <div className="forgot-password-wrapper">
-          <Link to={'/forgot-password'}>Забыли пароль?</Link>
+          <Link to={'/login'}>Войти</Link>
         </div>
       </div>
       <div className={'authentication-link-wrapper'}>
-        <p>Нет аккаунта? <Link to={'signup'}>Регистрация</Link></p>
+        <p>Уже есть аккаунт? <Link to={'login'}>Войти</Link></p>
       </div>
     </div>
   )
 }
 
-export default LoginPage;
+export default ForgotPasswordPage;

@@ -11,7 +11,6 @@ export function GlobalPopupProvider({ children }) {
 
   const value = {
     // actions
-
     // state
     message,
     addMessage: useCallback((message, payload) => addMessage(message, payload), []),
