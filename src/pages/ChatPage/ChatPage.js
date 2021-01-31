@@ -3,7 +3,6 @@ import './chat-page.scss'
 import { useMessages } from "../../contexts/MessagesContext";
 import { Prompt, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import AudioMessage from "../../components/AudioMessage/AudioMessage";
 
 const ChatPage = () => {
   // ref
@@ -16,6 +15,7 @@ const ChatPage = () => {
   const {
     // state
     messages,
+    test,
     // text messages actions
     getMessages,
     stopGettingMessages,
@@ -35,14 +35,14 @@ const ChatPage = () => {
     if (otherUserId) getMessages(otherUserId);
   }, [ otherUserId ]);
 
-  useEffect(() => {
-    const unListen = history.listen(() => {
-      stopGettingMessages();
-    });
-    return () => {
-      unListen();
-    }
-  }, []);
+  // useEffect(() => {
+  //   const unListen = history.listen(() => {
+  //
+  //   });
+  //   return () => {
+  //     unListen();
+  //   }
+  // }, []);
 
   useEffect(() => {
     console.log('message', messages);
@@ -50,6 +50,18 @@ const ChatPage = () => {
 
   return (
     <div className={'chat'}>
+      <Prompt
+        when={showVoiceRecorder}
+        message={((location) => {
+          const prevLocation = window.location.href.split('/')[4];
+          const nextLocation = location.pathname.split('/')[2];
+          if (showVoiceRecorder && prevLocation !== nextLocation) {
+            handlePermissions(false);
+            stopGettingMessages();
+          }
+          return true;
+        })}
+      />
       <div className={'chat-window'}>
         {messages && messages.map(message => (
           // где то здесь нужно считать какой тип сообщения мне пришел и в зависимости от этого выводить просто сообщение или гс или ещё что то
@@ -67,12 +79,14 @@ const ChatPage = () => {
             {message.messageDetails.type === 'voice' &&
             <div className="App">
               <header className="App-header">
-                <audio src={message.messageDetails.voice} controls="controls"/>
+                <audio src={message.messageDetails.url} controls="controls"/>
               </header>
-            </div>}
+            </div>
+            }
           </div>
         ))}
       </div>
+
       <div className={'chat-input-wrapper'}>
         <input type="text" className={'chat-input'} ref={message} onInput={() => {
           message.current.value.length > 0 ? setShowVoiceRecorder(false) : setShowVoiceRecorder(true);

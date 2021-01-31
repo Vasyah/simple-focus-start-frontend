@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { useAuth } from "./AuthContext";
 import MicRecorder from 'mic-recorder-to-mp3';
+import JSZip from 'jszip';
+import uniqId from "uniqid";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
@@ -10,12 +12,12 @@ const MessagesContext = React.createContext(undefined, undefined);
 export const useMessages = () => useContext(MessagesContext);
 
 let messagesRef;
+let audioMessagesRef;
 
 export function MessagesProvider({ children }) {
   // state
   const [ messages, setMessages ] = useState([]);
   const [ isRecording, setIsRecording ] = useState(false);
-  const [ blobURL, setBlobURL ] = useState('');
   const [ isBlocked, setIsBlocked ] = useState(false);
   // other
   const { currentUser } = useAuth();
@@ -42,13 +44,25 @@ export function MessagesProvider({ children }) {
       .stop()
       .getMp3()
       .then(([ buffer, blob ]) => {
-        const blobURL = URL.createObjectURL(blob)
-        console.log(blobURL);
-        setBlobURL(blobURL);
         setIsRecording(false);
-        sendMessageHandler({ message, showVoiceRecorder, otherUserId, blobURL });
+        // set voice file
+        const file = new File(buffer, 'music.mp3', {
+          type: blob.type,
+          lastModified: Date.now()
+        });
+        console.log('player', URL.createObjectURL(file));
+
+        const uniqIdSaved = uniqId();
+        // save voice file in another db
+        firebase.storage()
+          .ref(`chats/${currentUser.id}/${otherUserId}/${uniqIdSaved}`)
+          .put(file)
+          .then(snapshot => {
+            console.log(snapshot);
+            sendMessageHandler({ message, showVoiceRecorder, otherUserId, uniqId: uniqIdSaved });
+          });
       })
-      .catch((e) => console.log(e));
+      .catch((error) => console.log('voice recording error', error));
   };
 
   const handlePermissions = (record) => {
@@ -60,30 +74,50 @@ export function MessagesProvider({ children }) {
       || navigator.msGetUserMedia
     );
 
-    // off mic after voice recorded
-    document.querySelectorAll('audio').forEach(item => {
-      if (!item.srcObject) return;
-      const tracks = item.srcObject.getTracks();
-      tracks.forEach(track => {
-        track.stop();
-      });
-    });
-    // set permissions true/false
+    // set permissions
     navigator.getUserMedia({ audio: true },
-      () => {
-        console.log('Permission Granted');
-        setIsBlocked(false);
+      (stream) => {
+        console.log('record', record);
+        if (record) {
+          console.log('Permission Granted');
+          setIsBlocked(false);
+        } else {
+          stream.getAudioTracks().forEach(track => {
+            track.stop();
+          })
+          // setIsBlocked(true);
+        }
       },
       () => {
         console.log('Permission Denied');
         setIsBlocked(true);
       },
     );
+
+    // off mic after voice recorded
+    // document.querySelectorAll('audio').forEach(item => {
+    //   console.log(item.srcObject);
+    //   if (!item.srcObject) return;
+    //   const tracks = item.srcObject.getTracks();
+    //   tracks.forEach(track => {
+    //     track.stop();
+    //   });
+    // });
   }
 
   // text messages
 
   const sendMessage = (payload) => {
+    // audio messages
+    // firebase.storage()
+    //   .ref(`chats/${currentUser.id}/${payload.otherUserId}`)
+    //   .put(payload.messageInfo).then();
+    // firebase.database()
+    //   .ref(`chats/${payload.otherUserId}/${currentUser.id}`)
+    //   .push(payload.messageInfo);
+
+    // апихнуть url на моменте пуша в массив
+
     // send message to both of users
     firebase.database()
       .ref(`chats/${currentUser.id}/${payload.otherUserId}`)
@@ -96,16 +130,26 @@ export function MessagesProvider({ children }) {
   const getMessages = (otherUserId) => {
     // get messages from db
     const newMessages = [];
-    messagesRef = firebase.database().ref('chats/' + currentUser.id + '/' + otherUserId);
+    messagesRef = firebase.database().ref(`chats/${currentUser.id}/${otherUserId}`);
+    // audioMessagesRef = firebase.storage().ref(`chats/${currentUser.id}/${otherUserId}`);
+
+    // audioMessagesRef.getMetadata().then(metadata => {
+    //   console.log(metadata);
+    // }).catch(error => {
+    //   console.log('metadata error', error);
+    // })
+
     messagesRef.on('child_added', snapshot => {
       let messageDetails = snapshot.val();
       let messageId = snapshot.key;
+
       newMessages.push({
         messageDetails,
         messageId
       })
-      Promise.all(newMessages).then(() => {
-        // setMessages(() => setMessages(messages));
+
+      return Promise.all(newMessages).then(() => {
+        console.log(newMessages);
         setMessages(() => {
           setTimeout(() => setMessages(newMessages));
         });
@@ -156,24 +200,26 @@ export function MessagesProvider({ children }) {
 
     // set type of message
     let messageType;
-    if (payload.showVoiceRecorder && payload.blobURL.length) {
+    if (payload.showVoiceRecorder) {
       messageType = 'voice';
+      // надо придумать voiceId какой то чтобы потом тягать по нему файл из базы данных с голосовыми
       // send voice messages
-      sendMessage({
-        otherUserId: payload.otherUserId,
-        messageInfo: {
-          voice: payload.blobURL,
-          from: {
-            name: currentUser.name,
-            id: currentUser.id
-          },
-          time,
-          type: messageType
-        }
-      })
+      firebase.storage().ref(`chats/${currentUser.id}/${payload.otherUserId}/${payload.uniqId}`).getDownloadURL().then(url => {
+        sendMessage({
+          otherUserId: payload.otherUserId,
+          messageInfo: {
+            from: {
+              name: currentUser.name,
+              id: currentUser.id
+            },
+            time,
+            type: messageType,
+            url
+          }
+        })
+      });
     } else {
       // send text messages
-      setBlobURL('');
       messageType = 'text';
       sendMessage({
         otherUserId: payload.otherUserId,
@@ -195,7 +241,6 @@ export function MessagesProvider({ children }) {
     // state
     messages,
     isRecording,
-    blobURL,
     isBlocked,
     // text messages actions
     sendMessage,

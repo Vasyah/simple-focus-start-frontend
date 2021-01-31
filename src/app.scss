@@ -1,3 +1,5 @@
+@import "variables";
+
 .flex-container {
   display: flex;
 }
@@ -6,4 +8,56 @@
 }
 .flex-item-middle {
   width: 80%;
+}
+
+body.light-mode {
+  transition: background-color 0.2s ease;
+  background-color: $light-color;
+  color: #000;
+  border-color: $gray-color;
+
+  button {
+    background: $primary-color;
+    border-color: $primary-color;
+  }
+
+  .header-wrapper {
+    box-shadow: 0 5px 8px 0 rgba(34, 60, 80, 0.23);
+  }
+
+  .profile-avatar {
+    background-color: $dark-color;
+    color: #fff;
+  }
+}
+
+body.dark-mode {
+  transition: background-color 0.2s ease;
+  background-color: $dark-color;
+  color: #fff;
+  border-color: #fff;
+
+  button {
+    background: $dark-color;
+    color: #fff;
+    border-color: #fff;
+  }
+
+  input {
+    color: #fff;
+    background: $dark-color;
+  }
+
+  a {
+    color: #fff;
+  }
+
+  .header-wrapper {
+    box-shadow: 0px 5px 8px 0px rgba(255, 255, 255, 0.23);
+  }
+
+  .profile-avatar {
+    background-color: $light-color;
+    color: $dark-color;
+  }
 }

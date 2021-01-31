@@ -4,6 +4,7 @@ import Alert from "../Alert/Alert";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from '../../assets/logo/logo-transparent-cut.png';
+import { useTheme } from "../../contexts/ThemeContext";
 
 const Header = () => {
   // ref
@@ -14,6 +15,7 @@ const Header = () => {
   // other
   const history = useHistory();
   const { currentUser, allUsers, logout } = useAuth();
+  const { toggleTheme, theme } = useTheme();
 
   const handleUpdate = () => {
     history.push('/update-profile');
@@ -48,6 +50,10 @@ const Header = () => {
         </Link>
         <div className="navigation">
           <Link to={'/video'}>VIDEO</Link>
+          <input type="checkbox" checked={theme === 'dark'} onClick={event => {
+            event.target.checked ? toggleTheme('dark') : toggleTheme('light');
+          }}/>
+          {theme}
         </div>
         {
           currentUser &&

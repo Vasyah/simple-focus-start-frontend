@@ -24,7 +24,6 @@ import SignupPage from "./pages/SignupPage/SignupPage";
 
 function App() {
 
-
   return (
     <BrowserRouter>
       <AuthProvider>

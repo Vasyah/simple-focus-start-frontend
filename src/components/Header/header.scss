@@ -3,7 +3,9 @@
 .header-wrapper {
   height: 60px;
   width: 100vw;
-  background: $light-color;
+  //background: $light-color;
+
+  //position: absolute;
 }
 
 .header-content {
@@ -27,9 +29,9 @@
   transition: 0.3s ease;
   grid-column: span 3;
 
-  &:hover {
-    background-color: $gray-color;
-  }
+  //&:hover {
+  //  background-color: $gray-color;
+  //}
 }
 
 .logo {
@@ -52,8 +54,8 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: darkslateblue;
-  color: #fff;
+  //background-color: darkslateblue;
+  //color: #fff;
   line-height: 30px;
   position: relative;
   display: flex;
