@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import io from "socket.io-client";
-import Peer from "simple-peer";
 import './video-chat-page.scss';
 import { useAuth } from "../../contexts/AuthContext";
-import { useHistory, useLocation, Prompt } from "react-router-dom";
+import { useHistory, Prompt } from "react-router-dom";
 import { useVideo } from "../../contexts/VideoContext";
-import { useGlobalPopup } from "../../contexts/GlobalPopupContext";
 
 const VideoChatPage = () => {
   // ref
@@ -16,7 +13,6 @@ const VideoChatPage = () => {
   const [ otherUser, setOtherUser ] = useState({});
   // other
   const history = useHistory();
-  const { addMessage } = useGlobalPopup();
   const {
     // state
     receivingCall,
@@ -50,7 +46,6 @@ const VideoChatPage = () => {
   if (receivingCall && !callAccepted && caller) {
     IncomingCall = (
       <div>
-        <h1>accept</h1>
         <button onClick={() => {
           acceptCall(partnerVideo);
         }}>
@@ -68,6 +63,7 @@ const VideoChatPage = () => {
 
   useEffect(() => {
     startVideo(userVideo);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ currentUser ]);
 
   useEffect(() => {
@@ -80,20 +76,6 @@ const VideoChatPage = () => {
   return (
     <div className={'videochat-wrapper container'}>
       <div className={'videochat-control-buttons'}>
-        {/*{allUsers.map(user => {*/}
-        {/*  if (user.id === currentUser.id) {*/}
-        {/*    return null;*/}
-        {/*  }*/}
-        {/*  return (*/}
-        {/*    <button*/}
-        {/*      key={user.id}*/}
-        {/*      onClick={() => {*/}
-        {/*        callPeer(user.id, partnerVideo);*/}
-        {/*      }}>*/}
-        {/*      Call {user.id} {user.name}*/}
-        {/*    </button>*/}
-        {/*  );*/}
-        {/*})}*/}
         {otherUser && <button onClick={() => {
           callPeer(otherUserId, partnerVideo);
         }}>Позвонить: {otherUser.name}</button>

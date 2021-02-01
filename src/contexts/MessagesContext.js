@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import firebase from 'firebase';
 import { useAuth } from "./AuthContext";
 import MicRecorder from 'mic-recorder-to-mp3';
@@ -6,7 +6,7 @@ import uniqId from "uniqid";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-const MessagesContext = React.createContext(undefined, undefined);
+const MessagesContext = React.createContext(undefined);
 
 export const useMessages = () => useContext(MessagesContext);
 
@@ -75,7 +75,7 @@ export function MessagesProvider({ children }) {
     // set permissions
     navigator.getUserMedia({ audio: true },
       (stream) => {
-        console.log('record', record);
+        // console.log('record', record);
         if (record) {
           console.log('Permission Granted');
           setIsBlocked(false);
@@ -91,30 +91,11 @@ export function MessagesProvider({ children }) {
         setIsBlocked(true);
       },
     );
-
-    // off mic after voice recorded
-    // document.querySelectorAll('audio').forEach(item => {
-    //   console.log(item.srcObject);
-    //   if (!item.srcObject) return;
-    //   const tracks = item.srcObject.getTracks();
-    //   tracks.forEach(track => {
-    //     track.stop();
-    //   });
-    // });
   }
 
   // text messages
 
   const sendMessage = (payload) => {
-    // audio messages
-    // firebase.storage()
-    //   .ref(`chats/${currentUser.id}/${payload.otherUserId}`)
-    //   .put(payload.messageInfo).then();
-    // firebase.database()
-    //   .ref(`chats/${payload.otherUserId}/${currentUser.id}`)
-    //   .push(payload.messageInfo);
-
-    // апихнуть url на моменте пуша в массив
 
     // send message to both of users
     firebase.database()
@@ -129,13 +110,6 @@ export function MessagesProvider({ children }) {
     // get messages from db
     const newMessages = [];
     messagesRef = firebase.database().ref(`chats/${currentUser.id}/${otherUserId}`);
-    // audioMessagesRef = firebase.storage().ref(`chats/${currentUser.id}/${otherUserId}`);
-
-    // audioMessagesRef.getMetadata().then(metadata => {
-    //   console.log(metadata);
-    // }).catch(error => {
-    //   console.log('metadata error', error);
-    // })
 
     messagesRef.on('child_added', snapshot => {
       let messageDetails = snapshot.val();
@@ -199,7 +173,7 @@ export function MessagesProvider({ children }) {
     let messageType;
     if (payload.showVoiceRecorder) {
       messageType = 'voice';
-      // надо придумать voiceId какой то чтобы потом тягать по нему файл из базы данных с голосовыми
+
       // send voice messages
       firebase.storage().ref(`chats/${currentUser.id}/${payload.otherUserId}/${payload.uniqId}`).getDownloadURL().then(url => {
         sendMessage({

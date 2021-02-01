@@ -16,6 +16,7 @@ const StartListenServer = () => {
       startListen();
       console.log('listen')
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
   return (

@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import firebase from 'firebase';
+import React, { useContext, useState } from 'react';
 import { useAuth } from "./AuthContext";
 import io from "socket.io-client";
 import Peer from "simple-peer";
 
-const VideoContext = React.createContext(undefined, undefined);
+const VideoContext = React.createContext(undefined);
 
 export const useVideo = () => useContext(VideoContext);
 
@@ -15,7 +14,7 @@ export function VideoProvider({ children }) {
   const [ caller, setCaller ] = useState("");
   const [ callerSignal, setCallerSignal ] = useState();
   const [ callAccepted, setCallAccepted ] = useState(false);
-  const [ loading, setLoading ] = useState(false);
+  const [ loading ] = useState(false);
   const [ socket, setSocket ] = useState();
   // other
   const { currentUser } = useAuth();

@@ -1,28 +1,24 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import './header.scss';
-import Alert from "../Alert/Alert";
 import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from '../../assets/logo/logo-transparent-cut.png';
-import { useTheme } from "../../contexts/ThemeContext";
 import SwitchTheme from "../SwitchTheme/SwitchTheme";
 
 const Header = () => {
   // ref
   const dropdownRef = useRef();
   // state
-  const [ errors, setErrors ] = useState([]);
   const [ isProfileMenuOpened, setIsProfileMenuOpened ] = useState(false);
   // other
   const history = useHistory();
-  const { currentUser, allUsers, logout } = useAuth();
+  const { currentUser, logout } = useAuth();
 
   const handleUpdate = () => {
     history.push('/update-profile');
   }
 
   const handleLogout = async () => {
-    setErrors([]);
     try {
       await logout();
       history.push('/login');

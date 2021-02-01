@@ -1,6 +1,6 @@
 import React, { useContext, useCallback, useState } from 'react';
 
-const GlobalPopupContext = React.createContext(undefined, undefined);
+const GlobalPopupContext = React.createContext(undefined);
 
 export const useGlobalPopup = () => useContext(GlobalPopupContext);
 

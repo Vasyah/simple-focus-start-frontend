@@ -62,6 +62,7 @@ body.light-mode {
 
   .profile-dropdown-item {
     background: $light-color;
+    box-shadow: $dark-shadow;
   }
 
   .lds-roller div:after {
@@ -145,6 +146,7 @@ body.dark-mode {
 
   .profile-dropdown-item {
     background: $dark-color;
+    box-shadow: $light-shadow;
   }
 
   .lds-roller div:after {

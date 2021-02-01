@@ -20,7 +20,6 @@ const ChatPage = () => {
   const {
     // state
     messages,
-    test,
     // text messages actions
     getMessages,
     stopGettingMessages,
@@ -41,6 +40,7 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (otherUserId) getMessages(otherUserId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ otherUserId ]);
 
   useEffect(() => {
@@ -49,15 +49,6 @@ const ChatPage = () => {
     }
   }, [ allUsersWithoutMe ]);
 
-  // useEffect(() => {
-  //   const unListen = history.listen(() => {
-  //
-  //   });
-  //   return () => {
-  //     unListen();
-  //   }
-  // }, []);
-
   const scrollToBottom = () => {
     setTimeout(() => {
       chat.current.scrollTo(0, chat.current.scrollHeight)
@@ -65,7 +56,7 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    console.log('message', messages);
+    // console.log('message', messages);
     scrollToBottom();
   }, [ messages ]);
 
@@ -87,9 +78,10 @@ const ChatPage = () => {
         <div className="chat-user-info">
           <h4 className={'chat-user-name'}>{otherUser && otherUser.name}</h4>
         </div>
+        {otherUser && otherUser.online &&
         <Link className={'chat-user-call hover-bg'} to={`/video/${otherUserId}`}>
           <Icon style={{ lineHeight: '30px' }}>phone</Icon>
-        </Link>
+        </Link>}
       </div>
       <div className={'chat-window'} ref={chat}>
         {messages && messages.map(message => (
