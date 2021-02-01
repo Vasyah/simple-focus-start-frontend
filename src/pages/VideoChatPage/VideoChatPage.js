@@ -78,22 +78,22 @@ const VideoChatPage = () => {
       <div className={'videochat-control-buttons'}>
         {otherUser && otherUser.online && <button onClick={() => {
           callPeer(otherUserId, partnerVideo);
-        }}>Позвонить: {otherUser.name}</button>
+        }}>Позвонить {otherUser.name}</button>
         }
         <button onClick={() => {
           stopCurrentUserVideo(userVideo.current);
         }}>
-          stop video
+          Выключить камеру
         </button>
         <button onClick={() => {
           startVideo(userVideo)
         }}>
-          start video
+          Включить камеру
         </button>
         <button onClick={() => {
           stopCall(userVideo.current, partnerVideo.current);
         }}>
-          stop call
+          Сбросить звонок
         </button>
       </div>
       <div className={'videochat'}>

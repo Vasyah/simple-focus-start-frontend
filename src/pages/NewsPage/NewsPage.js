@@ -6,7 +6,7 @@ export default function NewsPage() {
   return (
     <>
       <div className="news-page">
-        <h1>News page</h1>
+        <h1>Новости</h1>
       </div>
     </>
   )
