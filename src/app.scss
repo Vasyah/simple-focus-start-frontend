@@ -80,8 +80,12 @@ body.light-mode {
     }
 
     .other-message {
-
+      background: $primary-color;
     }
+  }
+
+  .lds-ring div {
+    border-color: $primary-color transparent transparent transparent;
   }
 }
 
@@ -167,5 +171,9 @@ body.dark-mode {
     .other-message {
 
     }
+  }
+
+  .lds-ring div {
+    border-color: #fff transparent transparent transparent;
   }
 }

@@ -3,7 +3,7 @@ import './loading.scss';
 
 const Loading = () => {
   return (
-    <>
+    <div className={'loading'}>
       <div className="lds-roller">
         <div/>
         <div/>
@@ -14,7 +14,7 @@ const Loading = () => {
         <div/>
         <div/>
       </div>
-    </>
+    </div>
   )
 }
 

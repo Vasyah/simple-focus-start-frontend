@@ -1,5 +1,12 @@
 @import "../../variables.scss";
 
+.loading {
+  position: absolute;
+  left: calc(50% - 40px);
+  top: calc(50% - 40px);
+  z-index: 1000;
+}
+
 .lds-roller {
   display: inline-block;
   position: relative;

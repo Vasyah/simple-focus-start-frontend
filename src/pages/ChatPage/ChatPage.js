@@ -5,6 +5,8 @@ import { Link, Prompt, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Icon from '@material-ui/core/Icon';
 import classNames from 'classnames';
+import Loading from "../../components/Loading/Loading";
+import LilLoading from "../../components/LilLoading/LilLoading";
 
 const ChatPage = () => {
   // ref
@@ -84,39 +86,38 @@ const ChatPage = () => {
         </Link>}
       </div>
       <div className={'chat-window'} ref={chat}>
-        {messages && messages.map(message => (
-          // где то здесь нужно считать какой тип сообщения мне пришел и в зависимости от этого выводить просто сообщение или гс или ещё что то
-          <div
-            key={message.messageId}
-            className={classNames(
-              message.messageDetails.from.id === currentUser.id
-                ? 'my-message'
-                : 'other-message',
-              message.messageDetails.type === 'text'
-                ? 'text-message'
-                : 'voice-message'
-            )}>
-            {/*text message*/}
-            {message.messageDetails.type === 'text' &&
-            <>
-              {message.messageDetails.from.name}: {message.messageDetails.message}
-              <span
-                className={'message-time'}>{message.messageDetails.time.hours}:{message.messageDetails.time.minutes}</span>
-            </>}
-            {/*voice message*/}
-            {message.messageDetails.type === 'voice' &&
-            <>
-              <audio src={message.messageDetails.url} controls="controls"/>
-              <span
-                className={'message-time'}>
+        {messages
+          ? messages.map(message => (
+            <div
+              key={message.messageId}
+              className={classNames(
+                message.messageDetails.from.id === currentUser.id
+                  ? 'my-message'
+                  : 'other-message',
+                message.messageDetails.type === 'text'
+                  ? 'text-message'
+                  : 'voice-message'
+              )}>
+              {/*text message*/}
+              {message.messageDetails.type === 'text' &&
+              <>
+                {message.messageDetails.from.name}: {message.messageDetails.message}
+                <span
+                  className={'message-time'}>{message.messageDetails.time.hours}:{message.messageDetails.time.minutes}</span>
+              </>}
+              {/*voice message*/}
+              {message.messageDetails.type === 'voice' &&
+              <>
+                <audio src={message.messageDetails.url} controls="controls"/>
+                <span
+                  className={'message-time'}>
                 {message.messageDetails.time.hours}:{message.messageDetails.time.minutes}
               </span>
-            </>
-            }
-          </div>
-        ))}
+              </>
+              }
+            </div>
+          )) : <LilLoading/>}
       </div>
-
       <div className={'chat-input-wrapper'}>
         <input
           type="text"
