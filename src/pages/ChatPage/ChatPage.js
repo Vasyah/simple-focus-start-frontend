@@ -56,7 +56,7 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    // console.log('message', messages);
+    console.log('message', messages);
     scrollToBottom();
   }, [ messages ]);
 
@@ -97,10 +97,21 @@ const ChatPage = () => {
                 : 'voice-message'
             )}>
             {/*text message*/}
-            {message.messageDetails.type === 'text' && message.messageDetails.message}
+            {message.messageDetails.type === 'text' &&
+            <>
+              {message.messageDetails.from.name}: {message.messageDetails.message}
+              <span
+                className={'message-time'}>{message.messageDetails.time.hours}:{message.messageDetails.time.minutes}</span>
+            </>}
             {/*voice message*/}
             {message.messageDetails.type === 'voice' &&
-            <audio src={message.messageDetails.url} controls="controls"/>
+            <>
+              <audio src={message.messageDetails.url} controls="controls"/>
+              <span
+                className={'message-time'}>
+                {message.messageDetails.time.hours}:{message.messageDetails.time.minutes}
+              </span>
+            </>
             }
           </div>
         ))}

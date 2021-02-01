@@ -7,7 +7,6 @@
   justify-content: space-between;
   margin-top: 15px;
   border: 1px solid;
-  //border-left: 1px solid;
   border-radius: 4px;
 }
 
@@ -24,15 +23,26 @@
     word-wrap: break-word;
     display: flex;
     align-items: center;
+    width: 40%;
   }
 
   .my-message {
-    width: 40%;
     margin-left: auto;
+    position: relative;
+
+    .message-time {
+      position: absolute;
+      left: -45px;
+    }
   }
 
   .other-message {
-    width: 40%;
+    position: relative;
+
+    .message-time {
+      position: absolute;
+      right: -45px;
+    }
   }
 
   .text-message {
@@ -86,8 +96,6 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid;
-  //border-right: none;
-  //border-left: none;
   padding: 0 20px;
 }
 
