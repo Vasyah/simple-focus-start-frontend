@@ -2,10 +2,13 @@
 
 .flex-container {
   display: flex;
+  height: calc(100vh - 60px);
 }
+
 .flex-item-left {
   width: 20%;
 }
+
 .flex-item-middle {
   width: 80%;
 }
@@ -17,17 +20,67 @@ body.light-mode {
   border-color: $gray-color;
 
   button {
-    background: $primary-color;
-    border-color: $primary-color;
+    background-color: $primary-color;
+    border: 1px solid$primary-color;
+    //border-color: ;
+    color: #fff;
   }
 
   .header-wrapper {
-    box-shadow: 0 5px 8px 0 rgba(34, 60, 80, 0.23);
+    box-shadow: $dark-shadow;
   }
 
   .profile-avatar {
     background-color: $dark-color;
     color: #fff;
+  }
+
+  .hover-bg {
+
+    &:hover {
+      transition: 0.3s ease;
+      cursor: pointer;
+      background-color: $gray-color;
+      opacity: 0.7;
+    }
+  }
+  .user, .chat-user-call {
+    color: #000;
+  }
+
+  input#toggleCheck:checked + .slider {
+    background-color: #66bb6a;
+  }
+
+  .slider:before {
+    background-color: #fff;
+  }
+
+  .slider {
+    background-color: #ccc;
+  }
+
+  .profile-dropdown-item {
+    background: $light-color;
+  }
+
+  .lds-roller div:after {
+    background: $primary-color;
+  }
+
+  .chat-window {
+
+    .text-message {
+      background-color: #E9E8E8;
+    }
+
+    .my-message {
+
+    }
+
+    .other-message {
+
+    }
   }
 }
 
@@ -40,7 +93,8 @@ body.dark-mode {
   button {
     background: $dark-color;
     color: #fff;
-    border-color: #fff;
+    border: 1px solid #fff;
+    //border-color: ;
   }
 
   input {
@@ -53,11 +107,63 @@ body.dark-mode {
   }
 
   .header-wrapper {
-    box-shadow: 0px 5px 8px 0px rgba(255, 255, 255, 0.23);
+    box-shadow: $light-shadow;
   }
 
   .profile-avatar {
     background-color: $light-color;
     color: $dark-color;
+  }
+
+  .authentication-link {
+    color: #fff;
+  }
+
+  .hover-bg {
+
+    &:hover {
+      transition: 0.3s ease;
+      cursor: pointer;
+      background-color: #858484;
+      //opacity: 0.;
+    }
+  }
+
+  input#toggleCheck:checked + .slider {
+    background-color: #fff;
+    //border: 1px solid;
+
+  }
+
+  .slider:before {
+    background-color: $dark-color;
+  }
+
+  .slider {
+    background-color: #ccc;
+  }
+
+  .profile-dropdown-item {
+    background: $dark-color;
+  }
+
+  .lds-roller div:after {
+    background: #fff;
+  }
+
+  .chat-window {
+
+    .text-message {
+      background-color: $dark-color;
+      border: 1px solid;
+    }
+
+    .my-message {
+
+    }
+
+    .other-message {
+
+    }
   }
 }

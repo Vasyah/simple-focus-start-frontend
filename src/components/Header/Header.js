@@ -5,6 +5,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import logo from '../../assets/logo/logo-transparent-cut.png';
 import { useTheme } from "../../contexts/ThemeContext";
+import SwitchTheme from "../SwitchTheme/SwitchTheme";
 
 const Header = () => {
   // ref
@@ -15,7 +16,6 @@ const Header = () => {
   // other
   const history = useHistory();
   const { currentUser, allUsers, logout } = useAuth();
-  const { toggleTheme, theme } = useTheme();
 
   const handleUpdate = () => {
     history.push('/update-profile');
@@ -49,22 +49,27 @@ const Header = () => {
           <img className={'logo-img'} src={logo} alt="logo"/>
         </Link>
         <div className="navigation">
-          <Link to={'/video'}>VIDEO</Link>
-          <input type="checkbox" checked={theme === 'dark'} onClick={event => {
-            event.target.checked ? toggleTheme('dark') : toggleTheme('light');
-          }}/>
-          {theme}
+
         </div>
         {
-          currentUser &&
-          <div className="profile-dropdown-menu-wrapper" ref={dropdownRef}>
-            <div className="profile-dropdown-menu" onClick={() => setIsProfileMenuOpened(!isProfileMenuOpened)}>
-              <h3 className="profile-name">{currentUser.name}</h3>
-              <div className="profile-avatar">{currentUser.name.substr(0, 1)}</div>
-              <div className="profile-arrow"/>
-              {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
+          !currentUser
+            // if no user show only theme switch
+            ? <SwitchTheme/>
+            // if user show all menu
+            : <div className="profile-dropdown-menu-wrapper" ref={dropdownRef}>
+              <div className="profile-dropdown-menu hover-bg"
+                   onClick={() => setIsProfileMenuOpened(!isProfileMenuOpened)}>
+                <div className="profile-left">
+                  <h3 className="profile-name">{currentUser.name}</h3>
+                </div>
+                <div className="profile-right">
+                  <div className="profile-avatar">{currentUser.name.substr(0, 1)}</div>
+                  <div className="profile-arrow"/>
+                </div>
+              </div>
               {isProfileMenuOpened &&
               <div className="profile-dropdown-item">
+                <SwitchTheme/>
                 <div className={'update-profile-wrapper'}>
                   <button className={'update-profile-button'} onClick={handleUpdate}>Изменить профиль</button>
                 </div>
@@ -73,9 +78,7 @@ const Header = () => {
                 </div>
               </div>
               }
-            </div>
-          </div>
-        }
+            </div>}
       </div>
     </div>
   )

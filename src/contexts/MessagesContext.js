@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { useAuth } from "./AuthContext";
 import MicRecorder from 'mic-recorder-to-mp3';
-import JSZip from 'jszip';
 import uniqId from "uniqid";
 
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
@@ -12,7 +11,6 @@ const MessagesContext = React.createContext(undefined, undefined);
 export const useMessages = () => useContext(MessagesContext);
 
 let messagesRef;
-let audioMessagesRef;
 
 export function MessagesProvider({ children }) {
   // state
@@ -149,7 +147,6 @@ export function MessagesProvider({ children }) {
       })
 
       return Promise.all(newMessages).then(() => {
-        console.log(newMessages);
         setMessages(() => {
           setTimeout(() => setMessages(newMessages));
         });
@@ -166,7 +163,7 @@ export function MessagesProvider({ children }) {
   }
 
   const sendMessageHandler = (payload) => {
-    if (payload.message.current.value.length <= 0 && !payload.showVoiceRecorder) return;
+    if (payload.message.current.value.trim().length <= 0 && !payload.showVoiceRecorder) return;
     // set date of message
     const createdAt = new Date();
     const hours = createdAt.getHours()

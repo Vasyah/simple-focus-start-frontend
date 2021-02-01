@@ -1,15 +1,20 @@
 import React, { useRef, useState, useEffect } from 'react';
 import './chat-page.scss'
 import { useMessages } from "../../contexts/MessagesContext";
-import { Prompt, useHistory } from "react-router-dom";
+import { Link, Prompt, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
+import Icon from '@material-ui/core/Icon';
+import classNames from 'classnames';
 
 const ChatPage = () => {
   // ref
   const message = useRef();
+  const chat = useRef();
   // state
   const [ otherUserId, setOtherUserId ] = useState('');
+  const [ otherUser, setOtherUser ] = useState({});
   const [ showVoiceRecorder, setShowVoiceRecorder ] = useState(true);
+  const [ activeMicro, setActiveMicro ] = useState(false);
   // other
   const history = useHistory();
   const {
@@ -25,15 +30,24 @@ const ChatPage = () => {
     stop,
     handlePermissions
   } = useMessages();
-  const { currentUser } = useAuth();
+  const { currentUser, allUsersWithoutMe } = useAuth();
 
   useEffect(() => {
-    setOtherUserId(history.location.pathname.split('/')[2]);
-  }, [ history.location.pathname ]);
+    const otherUserId = history.location.pathname.split('/')[2];
+    const otherUser = allUsersWithoutMe.find(user => user.id === otherUserId);
+    setOtherUserId(otherUserId);
+    setOtherUser(otherUser);
+  }, [ allUsersWithoutMe, history.location.pathname ]);
 
   useEffect(() => {
     if (otherUserId) getMessages(otherUserId);
   }, [ otherUserId ]);
+
+  useEffect(() => {
+    if (allUsersWithoutMe) {
+
+    }
+  }, [ allUsersWithoutMe ]);
 
   // useEffect(() => {
   //   const unListen = history.listen(() => {
@@ -44,8 +58,15 @@ const ChatPage = () => {
   //   }
   // }, []);
 
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      chat.current.scrollTo(0, chat.current.scrollHeight)
+    }, 20)
+  };
+
   useEffect(() => {
     console.log('message', messages);
+    scrollToBottom();
   }, [ messages ]);
 
   return (
@@ -62,51 +83,82 @@ const ChatPage = () => {
           return true;
         })}
       />
-      <div className={'chat-window'}>
+      <div className={'chat-user'}>
+        <div className="chat-user-info">
+          <h4 className={'chat-user-name'}>{otherUser && otherUser.name}</h4>
+        </div>
+        <Link className={'chat-user-call hover-bg'} to={`/video/${otherUserId}`}>
+          <Icon style={{ lineHeight: '30px' }}>phone</Icon>
+        </Link>
+      </div>
+      <div className={'chat-window'} ref={chat}>
         {messages && messages.map(message => (
           // где то здесь нужно считать какой тип сообщения мне пришел и в зависимости от этого выводить просто сообщение или гс или ещё что то
           <div
             key={message.messageId}
-            className={message.messageDetails.from.id === currentUser.id
-              ? 'my-message'
-              : 'other-message'}>
+            className={classNames(
+              message.messageDetails.from.id === currentUser.id
+                ? 'my-message'
+                : 'other-message',
+              message.messageDetails.type === 'text'
+                ? 'text-message'
+                : 'voice-message'
+            )}>
             {/*text message*/}
-            {message.messageDetails.type === 'text' &&
-            <span>
-              {message.messageDetails.message}
-            </span>}
+            {message.messageDetails.type === 'text' && message.messageDetails.message}
             {/*voice message*/}
             {message.messageDetails.type === 'voice' &&
-            <div className="App">
-              <header className="App-header">
-                <audio src={message.messageDetails.url} controls="controls"/>
-              </header>
-            </div>
+            <audio src={message.messageDetails.url} controls="controls"/>
             }
           </div>
         ))}
       </div>
 
       <div className={'chat-input-wrapper'}>
-        <input type="text" className={'chat-input'} ref={message} onInput={() => {
-          message.current.value.length > 0 ? setShowVoiceRecorder(false) : setShowVoiceRecorder(true);
-        }}/>
+        <input
+          type="text"
+          className={'chat-input'}
+          ref={message}
+          onKeyDown={event => {
+            if (event.key === 'Enter' && message.current.value.trim().length > 0) {
+              sendMessageHandler({ message, showVoiceRecorder, otherUserId });
+              message.current.value = '';
+              setShowVoiceRecorder(true);
+            }
+          }}
+          onInput={() => {
+            message.current.value.trim().length > 0 ? setShowVoiceRecorder(false) : setShowVoiceRecorder(true);
+          }}/>
         {
           showVoiceRecorder ?
             // если нет текста то...
-            <input type="checkbox" onClick={event => {
-              if (event.target.checked) {
-                handlePermissions(true);
-                start();
-              } else {
-                handlePermissions(false);
-                stop(message, showVoiceRecorder, otherUserId);
-              }
-            }}/> :
+            <>
+              <input
+                id="micro"
+                className={'microphone-input'}
+                type="checkbox"
+                onClick={event => {
+                  if (event.target.checked) {
+                    handlePermissions(true);
+                    setActiveMicro(true);
+                    start();
+                  } else {
+                    handlePermissions(false);
+                    setActiveMicro(false);
+                    stop(message, showVoiceRecorder, otherUserId);
+                  }
+                }}/>
+              <label
+                htmlFor="micro"
+                className={classNames('microphone-label', activeMicro ? 'active' : 'notActive')}>
+                <Icon>mic</Icon>
+              </label>
+            </> :
             // если есть текст то...
             <button onClick={() => {
               sendMessageHandler({ message, showVoiceRecorder, otherUserId });
-            }} className={'chat-button'}>Отправить
+            }} className={'chat-button'}>
+              <Icon>send</Icon>
             </button>
         }
       </div>

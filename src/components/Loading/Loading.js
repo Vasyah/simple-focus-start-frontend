@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import './loading.scss';
-import { useAuth } from "../../contexts/AuthContext";
 
 const Loading = () => {
   return (

@@ -1,0 +1,13 @@
+.videochat-wrapper {
+  margin-top: 15px;
+}
+
+.videochat-control-buttons {
+  display: flex;
+}
+
+.videochat {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}

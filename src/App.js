@@ -45,7 +45,7 @@ function App() {
                 <PrivateRoute path={'/update-profile'} render={() => (
                     <UpdateProfilePage/>
                 )}/>
-                <PrivateRoute path={'/video'} render={() =>
+                <PrivateRoute path={'/video/:id'} render={() =>
                     <VideoChatPage/>
                 }/>
                 <PrivateRoute path={'/chat/:id'} render={() => (

@@ -1,21 +1,21 @@
 import React from 'react';
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
+import './users.scss';
 
 const Users = () => {
-  const { allUsers, currentUser, allUsersWithoutMe } = useAuth();
+  const { allUsersWithoutMe } = useAuth();
 
   return (
-    <>
+    <div className={'users'}>
+      <h4 className={'users-title'}>Пользователи</h4>
       {allUsersWithoutMe.map(user => {
         return (
-          <div key={user.id}>
-            <Link to={`/chat/${user.id}`}>{user.name}</Link>
-          </div>
+          <Link className={'user hover-bg'} key={user.id} to={`/chat/${user.id}`}>{user.name}</Link>
         )
       })
       }
-    </>
+    </div>
   )
 }
 

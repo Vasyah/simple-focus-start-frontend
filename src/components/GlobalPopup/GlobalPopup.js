@@ -3,6 +3,8 @@ import { useGlobalPopup } from "../../contexts/GlobalPopupContext";
 import { useVideo } from "../../contexts/VideoContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+import './global-popup.scss';
+import Icon from "@material-ui/core/Icon";
 
 const GlobalPopup = () => {
   const { message, removeMessage, addMessage } = useGlobalPopup();
@@ -15,7 +17,7 @@ const GlobalPopup = () => {
   };
 
   const handleAccept = () => {
-    history.push('/video');
+    history.push(`/video/${caller.data.userId}`);
   }
 
   const handleClose = () => {
@@ -28,27 +30,29 @@ const GlobalPopup = () => {
     if (caller.data) user = allUsers.find(user => user.id === caller.data.userId);
     // добавляю сообщение
     if (receivingCall && !callAccepted && caller) addMessage(`вам звонит ${user.name}`, { type: 'call' });
-  }, [ receivingCall, callAccepted, caller ]);
+  }, [ receivingCall, callAccepted, caller, allUsers, addMessage ]);
 
   const popupType = () => {
     let popup;
     // выбираю нужный тип попапа
     switch (message.payload.type) {
       case 'call':
-        popup =
-          <>
-            <div>
-              {message.message && <p>{message.message}</p>}
-              <button onClick={() => {
-                handleAccept();
-                handleClose();
-              }}>ответить</button>
-              <button onClick={() => {
-                handleDecline();
-                handleClose();
-              }}>отклонить</button>
-            </div>
-          </>
+        popup = <div className={'call-popup'}>
+          {message.message && <p>{message.message}</p>}
+          <div className={'call-popup-buttons'}>
+            <button onClick={() => {
+              handleAccept();
+              handleClose();
+            }}>
+              <Icon style={{ lineHeight: '30px' }}>phone_enabled</Icon>
+            </button>
+            <button onClick={() => {
+              handleDecline();
+              handleClose();
+            }}><Icon style={{ lineHeight: '30px' }}>phone_disabled</Icon>
+            </button>
+          </div>
+        </div>
         break;
       case 'message':
         popup =

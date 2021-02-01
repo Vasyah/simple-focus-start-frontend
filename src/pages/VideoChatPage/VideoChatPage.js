@@ -12,6 +12,8 @@ const VideoChatPage = () => {
   const userVideo = useRef();
   const partnerVideo = useRef();
   // state
+  const [ otherUserId, setOtherUserId ] = useState('');
+  const [ otherUser, setOtherUser ] = useState({});
   // other
   const history = useHistory();
   const { addMessage } = useGlobalPopup();
@@ -28,7 +30,7 @@ const VideoChatPage = () => {
     callPeer,
     acceptCall
   } = useVideo();
-  const { currentUser, allUsers } = useAuth();
+  const { currentUser, allUsersWithoutMe } = useAuth();
 
   let UserVideo;
   if (stream) {
@@ -58,12 +60,6 @@ const VideoChatPage = () => {
     )
   }
 
-  // useEffect(() => {
-  //   if (receivingCall && !callAccepted && caller) {
-  //     return acceptCall(partnerVideo);
-  //   }
-  // }, [receivingCall, callAccepted, caller, partnerVideo, acceptCall]);
-
   useEffect(() => {
     return () => {
       console.log('video unmount')
@@ -74,8 +70,50 @@ const VideoChatPage = () => {
     startVideo(userVideo);
   }, [ currentUser ]);
 
+  useEffect(() => {
+    const otherUserId = history.location.pathname.split('/')[2];
+    const otherUser = allUsersWithoutMe.find(user => user.id === otherUserId);
+    setOtherUserId(otherUserId);
+    setOtherUser(otherUser);
+  }, [ allUsersWithoutMe, history.location.pathname ]);
+
   return (
     <div className={'videochat-wrapper container'}>
+      <div className={'videochat-control-buttons'}>
+        {/*{allUsers.map(user => {*/}
+        {/*  if (user.id === currentUser.id) {*/}
+        {/*    return null;*/}
+        {/*  }*/}
+        {/*  return (*/}
+        {/*    <button*/}
+        {/*      key={user.id}*/}
+        {/*      onClick={() => {*/}
+        {/*        callPeer(user.id, partnerVideo);*/}
+        {/*      }}>*/}
+        {/*      Call {user.id} {user.name}*/}
+        {/*    </button>*/}
+        {/*  );*/}
+        {/*})}*/}
+        {otherUser && <button onClick={() => {
+          callPeer(otherUserId, partnerVideo);
+        }}>Позвонить: {otherUser.name}</button>
+        }
+        <button onClick={() => {
+          stopCurrentUserVideo(userVideo.current);
+        }}>
+          stop video
+        </button>
+        <button onClick={() => {
+          startVideo(userVideo)
+        }}>
+          start video
+        </button>
+        <button onClick={() => {
+          stopCall(userVideo.current, partnerVideo.current);
+        }}>
+          stop call
+        </button>
+      </div>
       <div className={'videochat'}>
         <Prompt
           when={!!stream}
@@ -90,37 +128,6 @@ const VideoChatPage = () => {
         <div>
           {UserVideo}
           {PartnerVideo}
-        </div>
-        <div>
-          {allUsers.map(user => {
-            if (user.id === currentUser.id) {
-              return null;
-            }
-            return (
-              <button
-                key={user.id}
-                onClick={() => {
-                  callPeer(user.id, partnerVideo);
-                }}>
-                Call {user.id} {user.name}
-              </button>
-            );
-          })}
-          <button onClick={() => {
-            stopCurrentUserVideo(userVideo.current);
-          }}>
-            stop video
-          </button>
-          <button onClick={() => {
-            startVideo(userVideo)
-          }}>
-            start video
-          </button>
-          <button onClick={() => {
-            stopCall(userVideo.current, partnerVideo.current);
-          }}>
-            stop call
-          </button>
         </div>
         <div>
           {IncomingCall}

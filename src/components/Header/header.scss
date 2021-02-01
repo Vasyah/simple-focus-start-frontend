@@ -2,10 +2,9 @@
 
 .header-wrapper {
   height: 60px;
-  width: 100vw;
-  //background: $light-color;
-
-  //position: absolute;
+  width: 100%;
+  //margin-bottom: 30px;
+  border-bottom: 1px solid;
 }
 
 .header-content {
@@ -28,24 +27,27 @@
   cursor: pointer;
   transition: 0.3s ease;
   grid-column: span 3;
-
-  //&:hover {
-  //  background-color: $gray-color;
-  //}
+  position: relative;
+  position: relative;
 }
 
 .logo {
   grid-column: span 2;
 }
+
 .navigation {
   grid-column: span 7;
+}
+
+.profile-right {
+  display: flex;
+  align-items: center;
 }
 
 .profile-dropdown-menu {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  position: relative;
   align-content: center;
   height: 60px;
 }
@@ -66,16 +68,29 @@
 .profile-arrow {
   width: 6px;
   height: 6px;
-  border-top: 1px solid #000;
-  border-right: 1px solid #000;
+  border-top: 1px solid;
+  border-right: 1px solid;
   margin-right: 6px;
   right: -16px;
   transform: rotate(135deg);
+  margin-left: 10px;
 }
 
 .profile-dropdown-item {
   position: absolute;
-  bottom: -50px;
+  bottom: -130px;
   right: 0;
-  height: 50px;
+  height: 130px;
+  width: 200px;
+  //height: ;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  border: 1px solid;
+  border-top: none;
+  padding: 6px 8px;
+
+  button {
+    height: 30px;
+  }
 }

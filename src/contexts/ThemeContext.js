@@ -7,6 +7,7 @@ export const useTheme = () => useContext(ThemeContext);
 export function ThemeProvider({ children }) {
   // state
   const [theme, setTheme] = useState('light');
+  const [themeRus, setThemeRus] = useState('светлая');
 
   const toggleTheme = (theme) => {
     switch (theme) {
@@ -23,23 +24,29 @@ export function ThemeProvider({ children }) {
     }
   };
 
-  useEffect(() => {
+  const setThemeFn = () => {
     const getTheme = localStorage.getItem('theme');
-    console.log(getTheme);
     switch (getTheme) {
       case 'light':
         setTheme('light');
+        setThemeRus('светлая');
         return document.body.classList = 'light-mode';
       case 'dark':
         setTheme('dark');
+        setThemeRus('темная');
         return document.body.classList = 'dark-mode';
       default:
         return document.body.classList.add('light-mode');
     }
+  }
+
+  useEffect(() => {
+    setThemeFn();
   }, [theme]);
 
   const value = {
     theme,
+    themeRus,
     toggleTheme
   }
 

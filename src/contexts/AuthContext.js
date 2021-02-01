@@ -14,7 +14,6 @@ export function AuthProvider({ children }) {
   
   const [ allUsers, setAllUsers ] = useState([]);
   const [ allUsersWithoutMe, setAllUsersWithoutMe ] = useState([]);
-  const [ allUsersOnline, setAllUsersOnline ] = useState([]);
   // const [ loading, setLoading ] = useState(false); // мб потом использую
   // const [ loginAction, setLoginAction ] = useState(false);
   const [ logoutAction, setLogoutAction ] = useState(false);
