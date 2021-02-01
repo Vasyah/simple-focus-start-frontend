@@ -75,12 +75,17 @@ body.light-mode {
       background-color: #E9E8E8;
     }
 
-    .my-message {
+    .my-message.text-message {
+      background: $primary-color;
+      color: #fff;
 
+      .message-time {
+        color: #000;
+      }
     }
 
     .other-message {
-      background: $primary-color;
+
     }
   }
 
@@ -162,6 +167,15 @@ body.dark-mode {
     .text-message {
       background-color: $dark-color;
       border: 1px solid;
+    }
+
+    .my-message.text-message {
+      background: $light-color;
+      color: #000;
+
+      .message-time {
+        color: #fff;
+      }
     }
 
     .my-message {

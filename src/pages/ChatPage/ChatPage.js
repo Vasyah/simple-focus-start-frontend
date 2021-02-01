@@ -5,7 +5,6 @@ import { Link, Prompt, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import Icon from '@material-ui/core/Icon';
 import classNames from 'classnames';
-import Loading from "../../components/Loading/Loading";
 import LilLoading from "../../components/LilLoading/LilLoading";
 
 const ChatPage = () => {
@@ -58,7 +57,7 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    console.log('message', messages);
+    // console.log('message', messages);
     scrollToBottom();
   }, [ messages ]);
 
