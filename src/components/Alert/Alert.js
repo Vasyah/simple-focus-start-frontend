@@ -1,5 +1,5 @@
 import React from "react";
-import './alert.scss';
+import './Alert.scss';
 import classNames from 'classnames';
 
 const Alert = ({ messages, type }) => {

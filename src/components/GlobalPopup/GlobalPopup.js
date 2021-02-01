@@ -3,7 +3,7 @@ import { useGlobalPopup } from "../../contexts/GlobalPopupContext";
 import { useVideo } from "../../contexts/VideoContext";
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import './global-popup.scss';
+import './GlobalPopup.scss';
 import Icon from "@material-ui/core/Icon";
 
 const GlobalPopup = () => {

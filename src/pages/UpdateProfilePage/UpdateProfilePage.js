@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import './update-profile-page.scss';
+import './UpdateProfilePage.scss';
 import Alert from "../../components/Alert/Alert";
 import useValidateEmail from "../../hooks/useValidateEmail";
 import useValidatePassword from "../../hooks/useValidatePassword";
@@ -9,6 +9,7 @@ import useUpdateProfile from "../../hooks/useUpdateProfile";
 
 const UpdateProfilePage = () => {
   // ref
+  const nameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
   const passwordConfirmRef = useRef();
@@ -52,6 +53,15 @@ const UpdateProfilePage = () => {
         <h1 className={'authentication-title'}>Изменить профиль</h1>
         {errors.length !== 0 && <Alert messages={errors} type={'error'}/>}
         <form onSubmit={handleSubmit} className={'authentication-form'}>
+          <div className="authentication-row email">
+            <label htmlFor={'name'} className={'email-row__label'}>Имя</label>
+            <input
+              defaultValue={currentUser.name}
+              type="text"
+              ref={nameRef}
+              className={'email-row__input'}
+              id={'name'}/>
+          </div>
           <div className="authentication-row email">
             <label htmlFor={'email'} className={'email-row__label'}>Почта</label>
             <input

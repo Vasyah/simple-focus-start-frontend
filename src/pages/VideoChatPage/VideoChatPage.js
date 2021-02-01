@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './video-chat-page.scss';
+import './VideoChatPage.scss';
 import { useAuth } from "../../contexts/AuthContext";
 import { useHistory, Prompt } from "react-router-dom";
 import { useVideo } from "../../contexts/VideoContext";
@@ -76,7 +76,7 @@ const VideoChatPage = () => {
   return (
     <div className={'videochat-wrapper container'}>
       <div className={'videochat-control-buttons'}>
-        {otherUser && <button onClick={() => {
+        {otherUser && otherUser.online && <button onClick={() => {
           callPeer(otherUserId, partnerVideo);
         }}>Позвонить: {otherUser.name}</button>
         }

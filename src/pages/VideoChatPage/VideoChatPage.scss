@@ -4,6 +4,10 @@
 
 .videochat-control-buttons {
   display: flex;
+
+  button {
+    height: 40px;
+  }
 }
 
 .videochat {

@@ -1,7 +1,7 @@
 // base
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import './app.scss';
+import './App.scss';
 // components
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Header from "./components/Header/Header";

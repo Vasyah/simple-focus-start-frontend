@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import './private-route.scss';
+import './PrivateRoute.scss';
 import { Redirect, Route } from 'react-router-dom';
 import { useAuth } from "../../contexts/AuthContext";
 import Loading from "../Loading/Loading";

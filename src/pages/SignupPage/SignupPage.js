@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import './signup-page.scss';
+import './SignupPage.scss';
 import Alert from "../../components/Alert/Alert";
 import useValidateEmail from "../../hooks/useValidateEmail";
 import useValidatePassword from "../../hooks/useValidatePassword";

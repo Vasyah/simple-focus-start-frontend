@@ -2,7 +2,7 @@ import React from 'react';
 import { useAuth } from "../../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import classNames from 'classnames';
-import './users.scss';
+import './Users.scss';
 
 const Users = () => {
   const { allUsersWithoutMe } = useAuth();

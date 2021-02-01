@@ -69,7 +69,7 @@ export function VideoProvider({ children }) {
 
   const startVideo = (userVideo) => {
     if (currentUser) {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then(stream => {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then(stream => {
         setStream(stream);
         if (userVideo.current) {
           userVideo.current.srcObject = stream;

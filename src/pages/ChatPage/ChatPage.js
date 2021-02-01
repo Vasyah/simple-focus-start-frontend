@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import './chat-page.scss'
+import './ChatPage.scss'
 import { useMessages } from "../../contexts/MessagesContext";
 import { Link, Prompt, useHistory } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";

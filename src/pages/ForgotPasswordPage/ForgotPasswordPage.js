@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import './forgot-password-page.scss';
+import './ForgotPasswordPage.scss';
 import Alert from "../../components/Alert/Alert";
 import useForgotPassword from "../../hooks/useForgotPassword";
 import useValidateEmail from "../../hooks/useValidateEmail";
